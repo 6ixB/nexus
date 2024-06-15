@@ -6,5 +6,6 @@ import { oidcProviderModuleFactory } from './oidc.provider-module';
 @Module({
   controllers: [OidcController],
   providers: [oidcProviderModuleFactory(), OidcService],
+  exports: [OidcService],
 })
 export class OidcModule {}

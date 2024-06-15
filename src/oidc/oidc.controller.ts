@@ -1,10 +1,12 @@
 import { All, Controller, Logger, Req, Res } from '@nestjs/common';
 import { OidcService } from './oidc.service';
 import { Request, Response } from 'express';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('oidc')
+@ApiTags('oidc')
 export class OidcController {
-  private logger = new Logger(OidcController.name);
+  private readonly logger = new Logger(OidcController.name);
 
   constructor(private readonly oidcService: OidcService) {}
 
