@@ -10,23 +10,23 @@ import {
 export class CreateUserDto {
   @Type(() => String)
   @IsEmail()
-  @ApiProperty()
+  @ApiProperty({ type: String })
   email: string;
 
   @Type(() => String)
   @IsStrongPassword()
-  @ApiProperty()
+  @ApiProperty({ type: String })
   password: string;
 
   @Type(() => String)
   @IsString()
   @IsNotEmpty()
-  @ApiProperty()
+  @ApiProperty({ type: String })
   firstName: string;
 
   @Type(() => String)
   @IsString()
   @IsNotEmpty()
-  @ApiProperty()
+  @ApiProperty({ type: String })
   lastName: string;
 }

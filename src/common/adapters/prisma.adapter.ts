@@ -43,7 +43,7 @@ const expiresAt = (expiresIn?: number) =>
 
 export class PrismaAdapter implements Adapter {
   type: number;
-  private logger = new Logger(PrismaAdapter.name);
+  private logger = new Logger(`Oidc${PrismaAdapter.name}`);
 
   constructor(name: string) {
     this.type = types[name];
@@ -55,6 +55,7 @@ export class PrismaAdapter implements Adapter {
     expiresIn?: number,
   ): Promise<void> {
     this.logger.log(`Upserting ${this.type} ${id}`);
+    this.logger.log(payload);
 
     const data = {
       type: this.type,
@@ -95,7 +96,7 @@ export class PrismaAdapter implements Adapter {
     });
 
     if (!doc || (doc.expiresAt && doc.expiresAt < new Date())) {
-      this.logger.log(`Find ${this.type} ${id} not found`);
+      this.logger.log(`Find ${this.type} ${id} not found or expired`);
       return undefined;
     }
 
@@ -113,7 +114,9 @@ export class PrismaAdapter implements Adapter {
     });
 
     if (!doc || (doc.expiresAt && doc.expiresAt < new Date())) {
-      this.logger.log(`FindByUserCode ${this.type} ${userCode} not found`);
+      this.logger.log(
+        `FindByUserCode ${this.type} ${userCode} not found or expired`,
+      );
       return undefined;
     }
 
@@ -131,7 +134,7 @@ export class PrismaAdapter implements Adapter {
     });
 
     if (!doc || (doc.expiresAt && doc.expiresAt < new Date())) {
-      this.logger.log(`FindByUid ${this.type} ${uid} not found`);
+      this.logger.log(`FindByUid ${this.type} ${uid} not found or expired`);
       return undefined;
     }
 
