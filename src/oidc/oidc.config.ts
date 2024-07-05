@@ -17,9 +17,38 @@ const clients: ClientMetadata[] = [
 
 const adapter = PrismaAdapter;
 
+const interactions = {
+  url: async (ctx, interaction) => {
+    logger.log(
+      'Generating interactions URL for interaction UID:',
+      interaction.uid,
+    );
+
+    const url = `http://localhost:3000/client/auth/signin?interactionUid=${interaction.uid}`;
+
+    logger.log('Generated URL:', url);
+
+    return url;
+  },
+};
+
+const features = {
+  devInteractions: { enabled: false },
+};
+
+const cookies = {
+  short: {
+    path: '/',
+  },
+  keys: ['some-secret-key', 'another-secret-key'],
+};
+
 const oidcConfig: Configuration = {
   adapter,
   clients,
+  interactions,
+  features,
+  cookies,
 };
 
 export default oidcConfig;

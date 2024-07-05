@@ -1,6 +1,9 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/client/*"]
+    },
     "lib": [
       "dom",
       "dom.iterable",

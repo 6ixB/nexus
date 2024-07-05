@@ -1,8 +1,10 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import path from 'path';
-import next from 'next';
+import * as path from 'path';
 import { NextServer } from 'next/dist/server/next';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const next = require('next');
 
 @Injectable()
 export class ClientService implements OnModuleInit {

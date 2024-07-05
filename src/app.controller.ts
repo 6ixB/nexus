@@ -6,6 +6,6 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  @Redirect('/client/auth/signin', HttpStatus.MOVED_PERMANENTLY)
+  @Redirect('/client', HttpStatus.MOVED_PERMANENTLY)
   root() {}
 }

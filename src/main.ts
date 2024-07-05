@@ -3,8 +3,10 @@ import { AppModule } from './app.module';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import express from 'express';
-import path from 'path';
+import * as path from 'path';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const express = require('express');
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);

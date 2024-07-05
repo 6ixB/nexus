@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import express from 'express';
 import { ClientService } from './client.service';
+import { parse } from 'url';
 
 @Controller('client')
 export class ClientController {
@@ -31,13 +32,15 @@ export class ClientController {
     const nextApp = this.clientService.getNextApp();
     const nextAppRequestHandler = nextApp.getRequestHandler();
 
+    const parsedUrl = parse(req.url, true);
+
     try {
       if (req.url.startsWith('/client/_next')) {
         this.logger.log('Serving static Next.js asset');
-        return nextAppRequestHandler(req, res);
+        return nextAppRequestHandler(req, res, parsedUrl);
       }
 
-      await nextApp.render(req, res, req.url);
+      await nextApp.render(req, res, parsedUrl.pathname, parsedUrl.query);
     } catch (error) {
       this.logger.error(`Error rendering Next.js page: ${error.message}`);
       res
