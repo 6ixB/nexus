@@ -1,6 +1,6 @@
 ## Nexus
 
-A Simple Identity Provider Platform integrated with an OAuth 2.0 and OpenID Connect Authorization Server, built using Nest, Node OIDC Provider, and Prisma.
+A Simple Identity Provider Platform and an OAuth 2.0 and OpenID Connect Authorization Server, built using Nest.js, Next.js, Node OIDC Provider, and Prisma.
 
 ## Installation
 
