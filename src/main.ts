@@ -3,12 +3,19 @@ import { AppModule } from './app.module';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import express from 'express';
+import path from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   const { httpAdapter } = app.get(HttpAdapterHost);
+
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
+  app.use(
+    '/_next',
+    express.static(path.join(process.cwd(), './src/client/.next')),
+  );
 
   const config = new DocumentBuilder()
     .setTitle('Nexus')

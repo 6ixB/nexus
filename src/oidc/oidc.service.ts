@@ -13,12 +13,12 @@ export class OidcService {
 
   private readonly provider: Provider;
 
-  private issuerProtocol =
+  private readonly issuerProtocol =
     this.configService.get<string>('SERVER_ENV') === 'production'
       ? 'https'
       : 'http';
-  private issuerHost = this.configService.get<string>('SERVER_HOST');
-  private issuerPort = this.configService.get<string>('SERVER_PORT');
+  private readonly issuerHost = this.configService.get<string>('SERVER_HOST');
+  private readonly issuerPort = this.configService.get<string>('SERVER_PORT');
 
   constructor(
     private configService: ConfigService,
