@@ -2,6 +2,8 @@
 
 A Simple Identity Provider Platform and an OAuth 2.0 and OpenID Connect Authorization Server, built using Nest.js, Next.js, Node OIDC Provider, and Prisma.
 
+Disclaimer: This repository is used as a my personal learning outlet about OAuth 2.0 and OpenID Connect authorization and authentication flows.
+
 ## Installation
 
 ```bash
