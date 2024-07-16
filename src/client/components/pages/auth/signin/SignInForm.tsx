@@ -14,40 +14,15 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
-import { Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 
-export function SignInFormComponent() {
-  const searchParams = useSearchParams();
-  const interactionUid = searchParams.get('interactionUid');
+type SignInFormProps = {
+  interactionUid: string | undefined;
+};
 
-  const interaction = useQuery({
-    queryKey: [interactionUid],
-    queryFn: async () => {
-      const res = await fetch(`/auth/interactions/${interactionUid}`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const data = await res.json();
-
-      return data;
-    },
-    enabled: !!interactionUid,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    staleTime: Infinity,
-    retry: false,
-  });
-
-  console.log('Interaction Details: ', interaction.data);
-
+export default function SignInForm({ interactionUid }: SignInFormProps) {
   const form = useForm<z.infer<typeof AuthSignInDtoSchema>>({
     resolver: zodResolver(AuthSignInDtoSchema),
     defaultValues: {
@@ -56,20 +31,57 @@ export function SignInFormComponent() {
     },
   });
 
+  const router = useRouter();
+
+  const continueInteractionMutation = useMutation({
+    mutationFn: async (authInteractionDto: any) => {
+      const response = await fetch(
+        `/auth/interactions/${interactionUid}/signin`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(authInteractionDto),
+        },
+      );
+
+      const data = await response.json();
+
+      return data;
+    },
+    onSuccess: (data) => {
+      const { redirectTo } = data;
+
+      if (redirectTo) {
+        router.push(redirectTo);
+        // router.refresh();
+      }
+    },
+    onError: (error) => {
+      form.setError('root', {
+        type: 'manual',
+        message: error.message,
+      });
+    },
+  });
+
   async function onSubmit(values: z.infer<typeof AuthSignInDtoSchema>) {
+    if (!interactionUid) {
+      // TODO: Implement non-delegated authorization sign-in
+      return;
+    }
+
     const { email } = values;
 
-    await fetch(`/auth/interactions/${interactionUid}/finish`, {
-      method: 'POST',
-      credentials: 'include',
-      redirect: 'follow',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    const authInteractionDto = {
+      login: {
         accountId: email,
-      }),
-    });
+      },
+    };
+
+    await continueInteractionMutation.mutateAsync(authInteractionDto);
   }
 
   return (
@@ -128,13 +140,5 @@ export function SignInFormComponent() {
         </Button>
       </form>
     </Form>
-  );
-}
-
-export default function SignInForm() {
-  return (
-    <Suspense fallback={<div>Signin Fallback Component</div>}>
-      <SignInFormComponent />
-    </Suspense>
   );
 }

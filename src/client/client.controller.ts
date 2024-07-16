@@ -19,7 +19,7 @@ export class ClientController {
   constructor(private clientService: ClientService) {}
 
   @Get()
-  @Redirect('/client/auth/signin', HttpStatus.MOVED_PERMANENTLY)
+  @Redirect('/client/auth/signin', HttpStatus.TEMPORARY_REDIRECT)
   root() {}
 
   @All('*')
@@ -35,6 +35,7 @@ export class ClientController {
     const parsedUrl = parse(req.url, true);
 
     try {
+      // Serve static Next.js assets
       if (req.url.startsWith('/client/_next')) {
         this.logger.log('Serving static Next.js asset');
         return nextAppRequestHandler(req, res, parsedUrl);

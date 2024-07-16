@@ -15,6 +15,7 @@ import { UsersService } from 'src/users/users.service';
 import { Request, Response } from 'express';
 import { AuthInteractionDto } from './dto/auth-interaction.dto';
 import { InteractionResults } from 'oidc-provider';
+import assert from 'assert';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -34,13 +35,15 @@ export class AuthController {
     const oidcProvider = this.oidcService.getProvider();
     const interactionDetails = await oidcProvider.interactionDetails(req, res);
 
-    res.status(HttpStatus.OK).send(interactionDetails);
+    res
+      .set('Cache-Control', 'no-store')
+      .status(HttpStatus.OK)
+      .send(interactionDetails);
   }
 
-  @Post('interactions/:uid/finish')
+  @Post('interactions/:uid/signin')
   @ApiResponse({
-    status: HttpStatus.SEE_OTHER,
-    description: 'The interaction has been successfully finished.',
+    status: HttpStatus.CREATED,
   })
   @ApiBody({ type: AuthInteractionDto })
   async finishInteraction(
@@ -48,14 +51,100 @@ export class AuthController {
     @Res() res: Response,
     @Body() authInteractionDto: AuthInteractionDto,
   ) {
+    this.logger.log('interceptedCookies: ', req.cookies);
     this.logger.log(`finishInteraction for ${req.params.uid}`);
-    this.logger.log(authInteractionDto);
+    this.logger.log('interactionResult: ', authInteractionDto);
 
     const oidcProvider = this.oidcService.getProvider();
-    return await oidcProvider.interactionFinished(
+
+    const redirectTo = await oidcProvider.interactionResult(
       req,
       res,
       authInteractionDto as InteractionResults,
+      { mergeWithLastSubmission: false },
     );
+
+    this.logger.log('redirectTo: ', redirectTo);
+
+    res
+      .set('Cache-Control', 'no-store')
+      .status(HttpStatus.CREATED)
+      .send({ redirectTo });
+  }
+
+  @Post('interactions/:uid/confirm')
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+  })
+  async confirmInteraction(@Req() req: Request, @Res() res: Response) {
+    this.logger.log('interceptedCookies: ', req.cookies);
+    this.logger.log(`confirmInteraction for ${req.params.uid}`);
+
+    const oidcProvider = this.oidcService.getProvider();
+    const interactionDetails = await oidcProvider.interactionDetails(req, res);
+
+    const {
+      prompt: { name, details },
+      params,
+      session: { accountId },
+    } = interactionDetails;
+
+    assert.equal(name, 'consent');
+
+    let { grantId } = interactionDetails;
+    let grant;
+
+    if (grantId) {
+      grant = await oidcProvider.Grant.find(grantId);
+    } else {
+      grant = new oidcProvider.Grant({
+        accountId,
+        clientId: params.client_id as string,
+      });
+    }
+
+    if (details.missingOIDCScope) {
+      grant.addOIDCScope((details.missingOIDCScope as string[]).join(' '));
+    }
+
+    if (details.missingOIDCClaims) {
+      grant.addOIDCClaims(details.missingOIDCClaims);
+    }
+
+    if (details.missingResourceScopes) {
+      for (const [indicator, scopes] of Object.entries(
+        details.missingResourceScopes,
+      )) {
+        grant.addResourceScope(indicator, scopes.join(' '));
+      }
+    }
+
+    grantId = await grant.save();
+
+    this.logger.log('grant: ', JSON.stringify(grant, null, 2));
+
+    const consent: { [key: string]: unknown } = {};
+    if (!interactionDetails.grantId) {
+      // we don't have to pass grantId to consent, we're just modifying existing one
+      consent.grantId = grantId;
+    }
+
+    const result = { consent };
+
+    this.logger.log('interactionResult: ', result);
+
+    const redirectTo = await oidcProvider.interactionResult(
+      req,
+      res,
+      result as InteractionResults,
+      { mergeWithLastSubmission: true },
+    );
+
+    this.logger.log('redirectTo: ', redirectTo);
+
+    res
+      .set('Cache-Control', 'no-store')
+      .status(HttpStatus.CREATED)
+      .send({ redirectTo });
   }
 }

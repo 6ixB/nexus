@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import cookieParser from 'cookie-parser';
 import * as path from 'path';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -14,6 +15,7 @@ async function bootstrap() {
   const { httpAdapter } = app.get(HttpAdapterHost);
 
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
+  app.use(cookieParser());
   app.use(
     '/_next',
     express.static(path.join(process.cwd(), './src/client/.next')),

@@ -4,22 +4,24 @@ import { Adapter, AdapterPayload } from 'oidc-provider';
 
 const prisma = new PrismaClient();
 
-const types = [
-  'Session',
-  'AccessToken',
-  'AuthorizationCode',
-  'RefreshToken',
-  'DeviceCode',
-  'ClientCredentials',
-  'Client',
-  'InitialAccessToken',
-  'RegistrationAccessToken',
-  'Interaction',
-  'ReplayDetection',
-  'PushedAuthorizationRequest',
-  'Grant',
-  'BackchannelAuthenticationRequest',
-].reduce(
+const models = [
+  'Session', // 1
+  'AccessToken', // 2
+  'AuthorizationCode', // 3
+  'RefreshToken', // 4
+  'DeviceCode', // 5
+  'ClientCredentials', // 6
+  'Client', // 7
+  'InitialAccessToken', // 8
+  'RegistrationAccessToken', // 9
+  'Interaction', // 10
+  'ReplayDetection', // 11
+  'PushedAuthorizationRequest', // 12
+  'Grant', // 13
+  'BackchannelAuthenticationRequest', //14
+];
+
+const types = models.reduce(
   (map, name, i) => ({ ...map, [name]: i + 1 }),
   {} as Record<string, number>,
 );
@@ -54,7 +56,7 @@ export class PrismaAdapter implements Adapter {
     payload: AdapterPayload,
     expiresIn?: number,
   ): Promise<void> {
-    this.logger.log(`Upserting ${this.type} ${id}`);
+    this.logger.log(`Upserting ${models[this.type - 1]} with ID: ${id}`);
     this.logger.log(payload);
 
     const data = {
@@ -84,7 +86,7 @@ export class PrismaAdapter implements Adapter {
   }
 
   async find(id: string): Promise<AdapterPayload | undefined> {
-    this.logger.log(`Finding ${this.type} ${id}`);
+    this.logger.log(`Finding ${models[this.type - 1]} with ID: ${id}`);
 
     const doc = await prisma.oidcModel.findUnique({
       where: {
@@ -96,16 +98,20 @@ export class PrismaAdapter implements Adapter {
     });
 
     if (!doc || (doc.expiresAt && doc.expiresAt < new Date())) {
-      this.logger.log(`Find ${this.type} ${id} not found or expired`);
+      this.logger.log(
+        `Find ${models[this.type - 1]} with ID: ${id} not found or expired`,
+      );
       return undefined;
     }
 
-    this.logger.log(`Found ${this.type} ${id}`);
+    this.logger.log(`Found ${models[this.type - 1]} with ID: ${id}`);
     return prepare(doc);
   }
 
   async findByUserCode(userCode: string): Promise<AdapterPayload | undefined> {
-    this.logger.log(`Finding ${this.type} by UserCode ${userCode}`);
+    this.logger.log(
+      `Finding ${models[this.type - 1]} with UserCode: ${userCode}`,
+    );
 
     const doc = await prisma.oidcModel.findFirst({
       where: {
@@ -115,17 +121,19 @@ export class PrismaAdapter implements Adapter {
 
     if (!doc || (doc.expiresAt && doc.expiresAt < new Date())) {
       this.logger.log(
-        `FindByUserCode ${this.type} ${userCode} not found or expired`,
+        `FindByUserCode ${models[this.type - 1]} with UserCode: ${userCode} not found or expired`,
       );
       return undefined;
     }
 
-    this.logger.log(`Found ${this.type} by UserCode ${userCode}`);
+    this.logger.log(
+      `Found ${models[this.type - 1]} with UserCode: ${userCode}`,
+    );
     return prepare(doc);
   }
 
   async findByUid(uid: string): Promise<AdapterPayload | undefined> {
-    this.logger.log(`Finding ${this.type} by UID ${uid}`);
+    this.logger.log(`Finding ${models[this.type - 1]} with UID: ${uid}`);
 
     const doc = await prisma.oidcModel.findUnique({
       where: {
@@ -134,16 +142,18 @@ export class PrismaAdapter implements Adapter {
     });
 
     if (!doc || (doc.expiresAt && doc.expiresAt < new Date())) {
-      this.logger.log(`FindByUid ${this.type} ${uid} not found or expired`);
+      this.logger.log(
+        `FindByUid ${models[this.type - 1]} with UID: ${uid} not found or expired`,
+      );
       return undefined;
     }
 
-    this.logger.log(`Found ${this.type} by UID ${uid}`);
+    this.logger.log(`Found ${models[this.type - 1]} with UID: ${uid}`);
     return prepare(doc);
   }
 
   async consume(id: string): Promise<void> {
-    this.logger.log(`Consuming ${this.type} ${id}`);
+    this.logger.log(`Consuming ${models[this.type - 1]} with ID: ${id}`);
 
     await prisma.oidcModel.update({
       where: {
@@ -159,7 +169,7 @@ export class PrismaAdapter implements Adapter {
   }
 
   async destroy(id: string): Promise<void> {
-    this.logger.log(`Destroying ${this.type} ${id}`);
+    this.logger.log(`Destroying ${models[this.type - 1]} with ID: ${id}`);
 
     await prisma.oidcModel.delete({
       where: {
@@ -172,7 +182,9 @@ export class PrismaAdapter implements Adapter {
   }
 
   async revokeByGrantId(grantId: string): Promise<void> {
-    this.logger.log(`Revoking ${this.type} by GrantId ${grantId}`);
+    this.logger.log(
+      `Revoking ${models[this.type - 1]} with GrantId: ${grantId}`,
+    );
 
     await prisma.oidcModel.deleteMany({
       where: {

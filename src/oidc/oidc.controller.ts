@@ -12,12 +12,11 @@ export class OidcController {
 
   @All('*')
   handleOidc(@Req() req: Request, @Res() res: Response) {
-    this.logger.log('Handling OIDC request');
-
     const oidcProvider = this.oidcService.getProvider();
     const oidcCallback = oidcProvider.callback();
 
     req.url = req.originalUrl.replace('/oidc', '');
+    this.logger.log(`Handling OIDC request to: ${req.url}`);
 
     return oidcCallback(req, res);
   }

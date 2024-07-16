@@ -5,10 +5,10 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import SignUpForm from "@/components/pages/auth/signup/SignUpForm";
-import Link from "next/link";
-import Nexus from "@/components/vector-graphics/Nexus";
+} from '@/components/ui/card';
+import SignUpForm from '@/components/pages/auth/signup/SignUpForm';
+import Link from 'next/link';
+import Nexus from '@/components/vector-graphics/Nexus';
 
 export default function SignUpPage() {
   return (
@@ -21,7 +21,7 @@ export default function SignUpPage() {
               href="/auth/signin"
               className="select-none text-sm text-blue-500 hover:text-blue-600"
             >
-              Sign in
+              Sign In
             </Link>
           </div>
           <CardTitle>
@@ -33,7 +33,7 @@ export default function SignUpPage() {
               Nexus
             </Link>
           </CardTitle>
-          <CardDescription>Sign up</CardDescription>
+          <CardDescription>Sign Up</CardDescription>
         </CardHeader>
         <CardContent>
           <SignUpForm />

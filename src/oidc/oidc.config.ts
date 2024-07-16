@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { ClientMetadata, Configuration } from 'oidc-provider';
-import PrismaAdapter from 'src/common/adapters/prisma.adapter';
+import PrismaAdapter from 'src/oidc/adapters/prisma.adapter';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const logger = new Logger('OidcConfig');
@@ -37,6 +37,9 @@ const features = {
 };
 
 const cookies = {
+  long: {
+    path: '/',
+  },
   short: {
     path: '/',
   },
