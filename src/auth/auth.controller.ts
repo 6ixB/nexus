@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { OidcService } from 'src/oidc/oidc.service';
+import { OauthService } from 'src/oauth/oauth.service';
 import { UsersService } from 'src/users/users.service';
 import { Request, Response } from 'express';
 import { AuthInteractionDto } from './dto/auth-interaction.dto';
@@ -25,7 +25,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
-    private readonly oidcService: OidcService,
+    private readonly oidcService: OauthService,
   ) {}
 
   @Get('interactions/:uid')
@@ -46,13 +46,13 @@ export class AuthController {
     status: HttpStatus.CREATED,
   })
   @ApiBody({ type: AuthInteractionDto })
-  async finishInteraction(
+  async signInInteraction(
     @Req() req: Request,
     @Res() res: Response,
     @Body() authInteractionDto: AuthInteractionDto,
   ) {
-    this.logger.log('interceptedCookies: ', req.cookies);
     this.logger.log(`finishInteraction for ${req.params.uid}`);
+    this.logger.log('interceptedCookies: ', req.cookies);
     this.logger.log('interactionResult: ', authInteractionDto);
 
     const oidcProvider = this.oidcService.getProvider();
@@ -66,6 +66,9 @@ export class AuthController {
 
     this.logger.log('redirectTo: ', redirectTo);
 
+    // Artificial delay to simulate a slow network
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     res
       .set('Cache-Control', 'no-store')
       .status(HttpStatus.CREATED)
@@ -77,8 +80,8 @@ export class AuthController {
     status: HttpStatus.CREATED,
   })
   async confirmInteraction(@Req() req: Request, @Res() res: Response) {
-    this.logger.log('interceptedCookies: ', req.cookies);
     this.logger.log(`confirmInteraction for ${req.params.uid}`);
+    this.logger.log('interceptedCookies: ', req.cookies);
 
     const oidcProvider = this.oidcService.getProvider();
     const interactionDetails = await oidcProvider.interactionDetails(req, res);
@@ -141,6 +144,43 @@ export class AuthController {
     );
 
     this.logger.log('redirectTo: ', redirectTo);
+
+    // Artificial delay to simulate a slow network
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    res
+      .set('Cache-Control', 'no-store')
+      .status(HttpStatus.CREATED)
+      .send({ redirectTo });
+  }
+
+  @Post('interactions/:uid/abort')
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+  })
+  @ApiBody({ type: AuthInteractionDto })
+  async abortInteraction(@Req() req: Request, @Res() res: Response) {
+    this.logger.log(`abortInteraction for ${req.params.uid}`);
+    this.logger.log('interceptedCookies: ', req.cookies);
+
+    const oidcProvider = this.oidcService.getProvider();
+
+    const result = {
+      error: 'access_denied',
+      error_description: 'End-User aborted interaction',
+    };
+
+    const redirectTo = await oidcProvider.interactionResult(
+      req,
+      res,
+      result as InteractionResults,
+      { mergeWithLastSubmission: false },
+    );
+
+    this.logger.log('redirectTo: ', redirectTo);
+
+    // Artificial delay to simulate a slow network
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     res
       .set('Cache-Control', 'no-store')

@@ -48,7 +48,6 @@ export default function SignUpForm() {
     },
     onSuccess: () => {
       router.push('/auth/signin');
-      router.refresh();
     },
     onError: (error) => {
       form.setError('root', {

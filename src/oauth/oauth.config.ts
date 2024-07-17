@@ -1,9 +1,9 @@
 import { Logger } from '@nestjs/common';
 import { ClientMetadata, Configuration } from 'oidc-provider';
-import PrismaAdapter from 'src/oidc/adapters/prisma.adapter';
+import PrismaAdapter from 'src/oauth/adapters/prisma.oauth-adapter';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const logger = new Logger('OidcConfig');
+const logger = new Logger('OauthConfig');
 
 const clients: ClientMetadata[] = [
   {
@@ -46,7 +46,7 @@ const cookies = {
   keys: ['some-secret-key', 'another-secret-key'],
 };
 
-const oidcConfig: Configuration = {
+const oauthConfig: Configuration = {
   adapter,
   clients,
   interactions,
@@ -54,4 +54,4 @@ const oidcConfig: Configuration = {
   cookies,
 };
 
-export default oidcConfig;
+export default oauthConfig;

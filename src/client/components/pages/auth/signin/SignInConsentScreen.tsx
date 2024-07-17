@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Separator } from '@/components/ui/separator';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -13,7 +14,10 @@ export default function SignInConsentScreen({
 }: SignInConsentScreenProps) {
   const router = useRouter();
 
-  const finishInteractionMutation = useMutation({
+  const {
+    mutateAsync: confirmMutateAsync,
+    isPending: confirmMutationIsPending,
+  } = useMutation({
     mutationFn: async () => {
       const response = await fetch(
         `/auth/interactions/${interactionUid}/confirm`,
@@ -41,6 +45,36 @@ export default function SignInConsentScreen({
       console.log(error);
     },
   });
+
+  const { mutateAsync: abortMutateAsync, isPending: abortMutationIsPending } =
+    useMutation({
+      mutationFn: async () => {
+        const response = await fetch(
+          `/auth/interactions/${interactionUid}/abort`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+
+        const data = await response.json();
+
+        return data;
+      },
+      onSuccess: (data) => {
+        const { redirectTo } = data;
+
+        if (redirectTo) {
+          router.push(redirectTo);
+        }
+      },
+      onError: (error) => {
+        console.log(error);
+      },
+    });
 
   return (
     <div className="w-full space-y-4">
@@ -84,14 +118,28 @@ export default function SignInConsentScreen({
       <div className="w-full flex items-center gap-x-4">
         <Button
           onClick={async () => {
-            await finishInteractionMutation.mutateAsync();
+            await confirmMutateAsync();
           }}
           className="w-full"
         >
-          Grant Access
+          {confirmMutationIsPending ? (
+            <LoadingSpinner className="text-white dark:text-black size-6" />
+          ) : (
+            'Grant'
+          )}
         </Button>
-        <Button variant="outline" className="w-full">
-          Deny
+        <Button
+          onClick={async () => {
+            await abortMutateAsync();
+          }}
+          variant="outline"
+          className="w-full"
+        >
+          {abortMutationIsPending ? (
+            <LoadingSpinner className="text-black dark:text-white size-6" />
+          ) : (
+            'Deny'
+          )}
         </Button>
       </div>
     </div>

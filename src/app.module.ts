@@ -1,12 +1,12 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { OidcModule } from './oidc/oidc.module';
+import { OauthModule } from './oauth/oauth.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ClientModule } from './client/client.module';
-import { OidcMiddleware } from './oidc/oidc.middleware';
+import { OauthMiddleware } from './oauth/oauth.middleware';
 
 @Module({
   imports: [
@@ -15,7 +15,7 @@ import { OidcMiddleware } from './oidc/oidc.middleware';
       envFilePath: ['.env', '.env.development.local'],
     }),
     AuthModule,
-    OidcModule,
+    OauthModule,
     UsersModule,
     ClientModule,
   ],
@@ -24,6 +24,6 @@ import { OidcMiddleware } from './oidc/oidc.middleware';
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(OidcMiddleware).forRoutes('oidc');
+    consumer.apply(OauthMiddleware).forRoutes('oauth');
   }
 }

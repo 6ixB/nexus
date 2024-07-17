@@ -5,20 +5,20 @@ import { Adapter, AdapterPayload } from 'oidc-provider';
 const prisma = new PrismaClient();
 
 const models = [
-  'Session', // 1
-  'AccessToken', // 2
-  'AuthorizationCode', // 3
-  'RefreshToken', // 4
-  'DeviceCode', // 5
-  'ClientCredentials', // 6
-  'Client', // 7
-  'InitialAccessToken', // 8
-  'RegistrationAccessToken', // 9
-  'Interaction', // 10
-  'ReplayDetection', // 11
-  'PushedAuthorizationRequest', // 12
-  'Grant', // 13
-  'BackchannelAuthenticationRequest', //14
+  'Session',
+  'AccessToken',
+  'AuthorizationCode',
+  'RefreshToken',
+  'DeviceCode',
+  'ClientCredentials',
+  'Client',
+  'InitialAccessToken',
+  'RegistrationAccessToken',
+  'Interaction',
+  'ReplayDetection',
+  'PushedAuthorizationRequest',
+  'Grant',
+  'BackchannelAuthenticationRequest',
 ];
 
 const types = models.reduce(
@@ -45,7 +45,7 @@ const expiresAt = (expiresIn?: number) =>
 
 export class PrismaAdapter implements Adapter {
   type: number;
-  private logger = new Logger(`Oidc${PrismaAdapter.name}`);
+  private logger = new Logger(`Oauth${PrismaAdapter.name}`);
 
   constructor(name: string) {
     this.type = types[name];

@@ -1,5 +1,3 @@
-'use client';
-
 import { AuthSignInDtoSchema } from '@/lib/schema/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -17,6 +15,7 @@ import { Input } from '@/components/ui/input';
 import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 type SignInFormProps = {
   interactionUid: string | undefined;
@@ -33,47 +32,49 @@ export default function SignInForm({ interactionUid }: SignInFormProps) {
 
   const router = useRouter();
 
-  const continueInteractionMutation = useMutation({
-    mutationFn: async (authInteractionDto: any) => {
-      const response = await fetch(
-        `/auth/interactions/${interactionUid}/signin`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
+  const { mutateAsync: signInMutateAsync, isPending: signInMutationIsPending } =
+    useMutation({
+      mutationFn: async (authInteractionDto: any) => {
+        const response = await fetch(
+          `/auth/interactions/${interactionUid}/signin`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(authInteractionDto),
           },
-          body: JSON.stringify(authInteractionDto),
-        },
-      );
+        );
 
-      const data = await response.json();
+        const data = await response.json();
 
-      return data;
-    },
-    onSuccess: (data) => {
-      const { redirectTo } = data;
+        return data;
+      },
+      onSuccess: (data) => {
+        const { redirectTo } = data;
 
-      if (redirectTo) {
-        router.push(redirectTo);
-        // router.refresh();
-      }
-    },
-    onError: (error) => {
-      form.setError('root', {
-        type: 'manual',
-        message: error.message,
-      });
-    },
-  });
+        if (redirectTo) {
+          router.push(redirectTo);
+        }
+      },
+      onError: (error) => {
+        form.setError('root', {
+          type: 'manual',
+          message: error.message,
+        });
+      },
+    });
 
   async function onSubmit(values: z.infer<typeof AuthSignInDtoSchema>) {
+    const { email } = values;
+
+    // TODO: Implement actual authentication logic
+
     if (!interactionUid) {
       // TODO: Implement non-delegated authorization sign-in
       return;
     }
-
-    const { email } = values;
 
     const authInteractionDto = {
       login: {
@@ -81,7 +82,7 @@ export default function SignInForm({ interactionUid }: SignInFormProps) {
       },
     };
 
-    await continueInteractionMutation.mutateAsync(authInteractionDto);
+    await signInMutateAsync(authInteractionDto);
   }
 
   return (
@@ -136,7 +137,11 @@ export default function SignInForm({ interactionUid }: SignInFormProps) {
           type="submit"
           className="w-full bg-blue-500 text-base text-white hover:bg-blue-600"
         >
-          Sign in
+          {signInMutationIsPending ? (
+            <LoadingSpinner className="text-white size-6" />
+          ) : (
+            'Sign in'
+          )}
         </Button>
       </form>
     </Form>

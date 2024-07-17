@@ -1,17 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { OidcController } from './oidc.controller';
-import { OidcService } from './oidc.service';
+import { OauthController } from './oauth.controller';
+import { OauthService } from './oauth.service';
 
 describe('OidcController', () => {
-  let controller: OidcController;
+  let controller: OauthController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [OidcController],
-      providers: [OidcService],
+      controllers: [OauthController],
+      providers: [OauthService],
     }).compile();
 
-    controller = module.get<OidcController>(OidcController);
+    controller = module.get<OauthController>(OauthController);
   });
 
   it('should be defined', () => {

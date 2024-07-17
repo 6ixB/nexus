@@ -15,12 +15,13 @@ import Nexus from '@/components/vector-graphics/Nexus';
 import SignInForm from '@/components/pages/auth/signin/SignInForm';
 import SignInConsentScreen from '@/components/pages/auth/signin/SignInConsentScreen';
 import { ModeToggle } from '@/components/base/ModeToggle';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 export function SignInPageComponent() {
   const searchParams = useSearchParams();
   const interactionUid = searchParams.get('interactionUid');
 
-  const { data: interaction } = useQuery({
+  const { data: interaction, isFetching } = useQuery({
     queryKey: [interactionUid],
     queryFn: async () => {
       const res = await fetch(`/auth/interactions/${interactionUid}`, {
@@ -62,8 +63,10 @@ export function SignInPageComponent() {
           </div>
           <CardDescription>Sign In</CardDescription>
         </CardHeader>
-        <CardContent>
-          {interaction?.prompt?.name === 'consent' ? (
+        <CardContent className="min-h-16">
+          {interactionUid && isFetching ? (
+            <LoadingSpinner className="text-black dark:text-white size-6 mx-auto" />
+          ) : interaction?.prompt?.name === 'consent' ? (
             <SignInConsentScreen interactionUid={interactionUid} />
           ) : (
             <SignInForm interactionUid={interactionUid} />
