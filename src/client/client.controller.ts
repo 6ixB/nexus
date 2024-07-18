@@ -27,7 +27,7 @@ export class ClientController {
     @Req() req: express.Request,
     @Res() res: express.Response,
   ) {
-    this.logger.log('Handling client request');
+    this.logger.log(`Handling client request to ${req.url}`);
 
     const nextApp = this.clientService.getNextApp();
     const nextAppRequestHandler = nextApp.getRequestHandler();
@@ -35,13 +35,7 @@ export class ClientController {
     const parsedUrl = parse(req.url, true);
 
     try {
-      // Serve static Next.js assets
-      if (req.url.startsWith('/client/_next')) {
-        this.logger.log('Serving static Next.js asset');
-        return nextAppRequestHandler(req, res, parsedUrl);
-      }
-
-      await nextApp.render(req, res, parsedUrl.pathname, parsedUrl.query);
+      await nextAppRequestHandler(req, res, parsedUrl);
     } catch (error) {
       this.logger.error(`Error rendering Next.js page: ${error.message}`);
       res

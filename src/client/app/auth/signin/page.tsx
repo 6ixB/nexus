@@ -16,6 +16,7 @@ import SignInForm from '@/components/pages/auth/signin/SignInForm';
 import SignInConsentScreen from '@/components/pages/auth/signin/SignInConsentScreen';
 import { ModeToggle } from '@/components/base/ModeToggle';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { Suspense } from 'react';
 
 export function SignInPageComponent() {
   const searchParams = useSearchParams();
@@ -94,5 +95,13 @@ export function SignInPageComponent() {
 }
 
 export default function SignInPage() {
-  return <SignInPageComponent />;
+  return (
+    <Suspense
+      fallback={
+        <LoadingSpinner className="text-black dark:text-white size-6 mx-auto" />
+      }
+    >
+      {SignInPageComponent()}
+    </Suspense>
+  );
 }
