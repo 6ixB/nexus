@@ -5,7 +5,6 @@ import {
   Res,
   Get,
   All,
-  Redirect,
   HttpStatus,
 } from '@nestjs/common';
 import express from 'express';
@@ -19,8 +18,9 @@ export class ClientController {
   constructor(private clientService: ClientService) {}
 
   @Get()
-  @Redirect('/client/auth/signin', HttpStatus.TEMPORARY_REDIRECT)
-  root() {}
+  root(@Req() req: express.Request, @Res() res: express.Response) {
+    return this.handleClient(req, res);
+  }
 
   @All('*')
   async handleClient(

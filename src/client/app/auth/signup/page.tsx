@@ -6,9 +6,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import SignUpForm from '@/components/pages/auth/signup/SignUpForm';
+import SignUpForm from '@/components/pages/auth/signup/signup-form';
 import Link from 'next/link';
-import Nexus from '@/components/vector-graphics/Nexus';
+import Nexus from '@/components/vector-graphics/nexus';
 
 export default function SignUpPage() {
   return (

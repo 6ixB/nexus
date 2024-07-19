@@ -1,6 +1,6 @@
 'use client';
 
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { LoadingSpinner } from '@/components/base/loading-spinner';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import base64url from 'base64url';
@@ -13,8 +13,8 @@ import {
 } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import Link from 'next/link';
-import Nexus from '@/components/vector-graphics/Nexus';
-import { ModeToggle } from '@/components/base/ModeToggle';
+import Nexus from '@/components/vector-graphics/nexus';
+import { ModeToggle } from '@/components/base/mode-toggle';
 import { AlertCircle } from 'lucide-react';
 
 function AuthErrorPageComponent() {

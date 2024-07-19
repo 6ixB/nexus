@@ -1,6 +1,6 @@
 import React from 'react';
-import ReactQueryProvider from '@/components/react-query/ReactQueryProvider';
-import { ThemeProvider } from '../providers/ThemeProvider';
+import ReactQueryProvider from '@/components/react-query/react-query-provider';
+import { ThemeProvider } from '../providers/theme-provider';
 
 type ProvidersProps = {
   children: React.ReactNode;

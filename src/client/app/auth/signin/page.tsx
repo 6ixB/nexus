@@ -11,11 +11,11 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import Link from 'next/link';
-import Nexus from '@/components/vector-graphics/Nexus';
-import SignInForm from '@/components/pages/auth/signin/SignInForm';
-import SignInConsentScreen from '@/components/pages/auth/signin/SignInConsentScreen';
-import { ModeToggle } from '@/components/base/ModeToggle';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import Nexus from '@/components/vector-graphics/nexus';
+import SignInForm from '@/components/pages/auth/signin/signin-form';
+import SignInConsentScreen from '@/components/pages/auth/signin/signin-consent-screen';
+import { ModeToggle } from '@/components/base/mode-toggle';
+import { LoadingSpinner } from '@/components/base/loading-spinner';
 import { Suspense } from 'react';
 
 export function SignInPageComponent() {
