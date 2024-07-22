@@ -182,7 +182,7 @@ export default function SignUpForm() {
         )}
         <Button
           type="submit"
-          className="w-full bg-blue-500 text-base text-white hover:bg-blue-600"
+          className="w-full text-base text-white dark:text-black"
         >
           Sign up
         </Button>

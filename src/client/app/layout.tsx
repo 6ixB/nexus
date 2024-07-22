@@ -1,10 +1,8 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { GeistSans } from 'geist/font/sans';
 import React from 'react';
 import '@/app/globals.css';
 import Providers from '@/components/base/providers';
-
-const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Nexus',
@@ -19,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className}`}>
+      <body className={GeistSans.className}>
         <Providers>{children}</Providers>
       </body>
     </html>
