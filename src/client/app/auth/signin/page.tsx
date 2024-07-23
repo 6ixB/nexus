@@ -48,9 +48,9 @@ export function SignInPageComponent() {
 
   return (
     <main className="container my-8 w-full">
-      <Card className="mx-auto max-w-md border-0 shadow-none md:border md:shadow-sm  md:p-4">
+      <Card className="mx-auto max-w-md border-0 shadow-none md:border md:p-4 md:shadow-sm">
         <CardHeader>
-          <div className="w-full flex justify-between">
+          <div className="flex w-full justify-between">
             <CardTitle>
               <Link
                 href="/"
@@ -66,7 +66,7 @@ export function SignInPageComponent() {
         </CardHeader>
         <CardContent className="min-h-16">
           {interactionUid && isFetching ? (
-            <LoadingSpinner className="text-black dark:text-white size-6 mx-auto" />
+            <LoadingSpinner className="mx-auto size-6 text-black dark:text-white" />
           ) : interaction?.prompt?.name === 'consent' ? (
             <SignInConsentScreen interactionUid={interactionUid} />
           ) : (
@@ -98,7 +98,7 @@ export default function SignInPage() {
   return (
     <Suspense
       fallback={
-        <LoadingSpinner className="text-black dark:text-white size-6 mx-auto" />
+        <LoadingSpinner className="mx-auto size-6 text-black dark:text-white" />
       }
     >
       {SignInPageComponent()}

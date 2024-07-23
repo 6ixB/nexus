@@ -82,7 +82,7 @@ export default function SignInConsentScreen({
         <span className="font-medium">Regenera</span> wants to access your
         account
       </div>
-      <div className="w-full flex flex-col items-center justify-center gap-y-2">
+      <div className="flex w-full flex-col items-center justify-center gap-y-2">
         <Avatar>
           <AvatarImage src="https://github.com/shadcn.png" />
           <AvatarFallback>JD</AvatarFallback>
@@ -95,7 +95,7 @@ export default function SignInConsentScreen({
           This will allow <span className="font-medium">Regenera</span> to
           access the following information:
         </div>
-        <ul className="list-disc list-inside font-light">
+        <ul className="list-inside list-disc font-light">
           <li>
             Access your <span className="font-normal">email address</span>
           </li>
@@ -115,7 +115,7 @@ export default function SignInConsentScreen({
         </p>
       </div>
       <Separator />
-      <div className="w-full flex items-center gap-x-4">
+      <div className="flex w-full items-center gap-x-4">
         <Button
           onClick={async () => {
             await confirmMutateAsync();
@@ -123,7 +123,7 @@ export default function SignInConsentScreen({
           className="w-full"
         >
           {confirmMutationIsPending ? (
-            <LoadingSpinner className="text-white dark:text-black size-6" />
+            <LoadingSpinner className="size-6 text-white dark:text-black" />
           ) : (
             'Grant'
           )}
@@ -136,7 +136,7 @@ export default function SignInConsentScreen({
           className="w-full"
         >
           {abortMutationIsPending ? (
-            <LoadingSpinner className="text-black dark:text-white size-6" />
+            <LoadingSpinner className="size-6 text-black dark:text-white" />
           ) : (
             'Deny'
           )}
