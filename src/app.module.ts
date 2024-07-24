@@ -7,6 +7,8 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ClientModule } from './client/client.module';
 import { OauthMiddleware } from './oauth/oauth.middleware';
+import { APP_FILTER, HttpAdapterHost } from '@nestjs/core';
+import { PrismaClientExceptionFilter } from 'nestjs-prisma';
 
 @Module({
   imports: [
@@ -14,13 +16,22 @@ import { OauthMiddleware } from './oauth/oauth.middleware';
       isGlobal: true,
       envFilePath: ['.env', '.env.development.local'],
     }),
-    OauthModule,
     UsersModule,
     ClientModule,
+    OauthModule,
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useFactory: ({ httpAdapter }: HttpAdapterHost) => {
+        return new PrismaClientExceptionFilter(httpAdapter);
+      },
+      inject: [HttpAdapterHost],
+    },
+    AppService,
+  ],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
