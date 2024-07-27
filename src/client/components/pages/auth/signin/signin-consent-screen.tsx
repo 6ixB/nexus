@@ -136,7 +136,7 @@ export default function SignInConsentScreen({
           className="w-full"
         >
           {abortMutationIsPending ? (
-            <LoadingSpinner className="size-6 text-black dark:text-white" />
+            <LoadingSpinner className="size-6 text-white dark:text-black" />
           ) : (
             'Deny'
           )}

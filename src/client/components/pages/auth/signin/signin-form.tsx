@@ -142,7 +142,7 @@ export default function SignInForm({ interactionUid }: SignInFormProps) {
           className="w-full text-base text-white dark:text-black"
         >
           {signInMutationIsPending ? (
-            <LoadingSpinner className="size-6 text-white" />
+            <LoadingSpinner className="size-6 text-white dark:text-black" />
           ) : (
             'Sign in'
           )}

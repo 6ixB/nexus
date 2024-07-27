@@ -17,6 +17,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { LoadingSpinner } from '@/components/base/loading-spinner';
 
 export default function SignUpForm() {
   const form = useForm<z.infer<typeof CreateUserDtoSchema>>({
@@ -32,7 +33,10 @@ export default function SignUpForm() {
 
   const router = useRouter();
 
-  const createUserMutation = useMutation({
+  const {
+    mutateAsync: createUserMutateAsync,
+    isPending: createUserMutationIsPending,
+  } = useMutation({
     mutationFn: async (createUserDto: CreateUserDto) => {
       const res = await fetch('/users', {
         method: 'POST',
@@ -67,7 +71,7 @@ export default function SignUpForm() {
       lastName,
     };
 
-    await createUserMutation.mutateAsync(createUserDto);
+    await createUserMutateAsync(createUserDto);
   }
 
   return (
@@ -184,7 +188,11 @@ export default function SignUpForm() {
           type="submit"
           className="w-full text-base text-white dark:text-black"
         >
-          Sign up
+          {createUserMutationIsPending ? (
+            <LoadingSpinner className="size-6 text-white dark:text-black" />
+          ) : (
+            'Sign up'
+          )}
         </Button>
       </form>
     </Form>

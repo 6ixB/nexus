@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Post,
   Body,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -16,6 +17,7 @@ import { Request, Response } from 'express';
 import { AuthInteractionDto } from './dto/auth-interaction.dto';
 import { InteractionResults } from 'oidc-provider';
 import assert from 'assert';
+import { OauthGuard } from './guards/oauth.guard';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -67,6 +69,7 @@ export class AuthController {
     this.logger.log('redirectTo: ', redirectTo);
 
     // Artificial delay to simulate a slow network
+    // TODO: Remove this in production
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     res
@@ -186,5 +189,11 @@ export class AuthController {
       .set('Cache-Control', 'no-store')
       .status(HttpStatus.CREATED)
       .send({ redirectTo });
+  }
+
+  @Get('callback')
+  @UseGuards(OauthGuard)
+  callback(@Req() req: Request) {
+    return req.user;
   }
 }

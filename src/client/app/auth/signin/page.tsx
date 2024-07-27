@@ -66,7 +66,7 @@ export function SignInPageComponent() {
         </CardHeader>
         <CardContent className="min-h-16">
           {interactionUid && isFetching ? (
-            <LoadingSpinner className="mx-auto size-6 text-black dark:text-white" />
+            <LoadingSpinner className="mx-auto size-6 text-white dark:text-black" />
           ) : interaction?.prompt?.name === 'consent' ? (
             <SignInConsentScreen interactionUid={interactionUid} />
           ) : (

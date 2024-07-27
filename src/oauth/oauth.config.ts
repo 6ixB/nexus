@@ -13,6 +13,13 @@ const clients: ClientMetadata[] = [
     grant_types: ['authorization_code'],
     response_types: ['code'],
   },
+  {
+    client_id: 'nexus',
+    client_secret: 'wj91Ww6NEE2pWKuByvhnB188ydhBckA/1QiHGmbTRoZB',
+    redirect_uris: ['http://localhost:3000/auth/callback'],
+    grant_types: ['authorization_code'],
+    response_types: ['code'],
+  },
 ];
 
 const adapter = PrismaAdapter;
