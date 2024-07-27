@@ -6,6 +6,7 @@ import PrismaAdapter from 'src/oauth/adapters/prisma.oauth-adapter';
 const logger = new Logger('OauthConfig');
 
 const clients: ClientMetadata[] = [
+  // Dummy client for testing
   {
     client_id: 'foo',
     client_secret: 'bar',
@@ -14,9 +15,9 @@ const clients: ClientMetadata[] = [
     response_types: ['code'],
   },
   {
-    client_id: 'nexus',
-    client_secret: 'wj91Ww6NEE2pWKuByvhnB188ydhBckA/1QiHGmbTRoZB',
-    redirect_uris: ['http://localhost:3000/auth/callback'],
+    client_id: process.env.OAUTH_CLIENT_ID,
+    client_secret: process.env.OAUTH_CLIENT_SECRET,
+    redirect_uris: [process.env.OAUTH_CLIENT_REDIRECT_URI],
     grant_types: ['authorization_code'],
     response_types: ['code'],
   },
