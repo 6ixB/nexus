@@ -191,6 +191,7 @@ export class AuthController {
       .send({ redirectTo });
   }
 
+  // TODO: Fully implement this callback route handler
   @Get('callback')
   @UseGuards(OauthGuard)
   callback(@Req() req: Request) {

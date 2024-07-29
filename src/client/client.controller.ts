@@ -1,17 +1,7 @@
-import {
-  Controller,
-  Logger,
-  Req,
-  Res,
-  Get,
-  All,
-  HttpStatus,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Logger, Req, Res, Get, HttpStatus } from '@nestjs/common';
 import express from 'express';
 import { ClientService } from './client.service';
 import { parse } from 'url';
-import { OauthGuard } from '../auth/guards/oauth.guard';
 
 @Controller('client')
 export class ClientController {
@@ -20,12 +10,11 @@ export class ClientController {
   constructor(private clientService: ClientService) {}
 
   @Get()
-  @UseGuards(OauthGuard)
   root(@Req() req: express.Request, @Res() res: express.Response) {
     return this.handleClient(req, res);
   }
 
-  @All('*')
+  @Get('*')
   async handleClient(
     @Req() req: express.Request,
     @Res() res: express.Response,

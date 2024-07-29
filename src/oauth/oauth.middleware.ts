@@ -11,19 +11,19 @@ export class OauthMiddleware implements NestMiddleware {
   private readonly logger = new Logger(OauthMiddleware.name);
 
   use(req: Request, res: Response, next: NextFunction) {
-    // Prevent requests with the query parameter '_rsc'
+    // Prevent requests with the query parameter '_rsc' from the Next.js app
     // _rsc requests are problematic because it can
-    // trigger the OIDC controller to perform unwanted request handlings
+    // trigger the OIDC controller to handle unwanted requests
 
     const forbiddenParam = '_rsc';
 
     if (req.query[forbiddenParam]) {
       this.logger.error(
-        `Requests with the query parameter '${forbiddenParam}' are not allowed.`,
+        `Requests with the query parameter '${forbiddenParam}' are not allowed and therefore are ignored.`,
       );
 
       throw new ForbiddenException(
-        `Requests with the query parameter '${forbiddenParam}' are not allowed.`,
+        `Requests with the query parameter '${forbiddenParam}' are not allowed and therefore are ignored.`,
       );
     }
 

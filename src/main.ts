@@ -2,7 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { Issuer } from 'openid-client';
 import { AuthService } from './auth/auth.service';
 import { OauthStrategy } from './auth/strategies/oauth.strategy';
 import session from 'express-session';
@@ -33,20 +32,11 @@ async function bootstrap() {
 
   await app.listen(3000);
 
-  const issuer = await Issuer.discover('http://localhost:3000/oauth');
-  const client = new issuer.Client({
-    client_id: process.env.OAUTH_CLIENT_ID,
-    client_secret: process.env.OAUTH_CLIENT_SECRET,
-    redirect_uris: [process.env.OAUTH_CLIENT_REDIRECT_URI],
-    response_types: ['code'],
-  });
-
   const authService = app.get(AuthService);
-  authService.setIssuer(issuer);
-  authService.setClient(client);
+  await authService.initialize();
 
-  const openIdConnectStrategy = app.get(OauthStrategy);
-  openIdConnectStrategy.initialize();
+  const oauthStrategy = app.get(OauthStrategy);
+  oauthStrategy.initialize();
 }
 
 bootstrap();

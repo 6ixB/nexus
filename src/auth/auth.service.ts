@@ -8,19 +8,32 @@ export class AuthService {
   private issuer: Issuer<BaseClient> | undefined;
   private client: BaseClient | undefined;
 
-  setIssuer(issuer: Issuer<BaseClient> | undefined) {
+  public async initialize() {
+    const issuer = await Issuer.discover('http://localhost:3000/oauth');
+    const client = new issuer.Client({
+      client_id: process.env.OAUTH_CLIENT_ID,
+      client_secret: process.env.OAUTH_CLIENT_SECRET,
+      redirect_uris: [process.env.OAUTH_CLIENT_REDIRECT_URI],
+      response_types: ['code'],
+    });
+
+    this.setIssuer(issuer);
+    this.setClient(client);
+  }
+
+  public setIssuer(issuer: Issuer<BaseClient> | undefined) {
     this.issuer = issuer;
   }
 
-  setClient(client: BaseClient | undefined) {
+  public setClient(client: BaseClient | undefined) {
     this.client = client;
   }
 
-  getIssuer(): Issuer<BaseClient> | undefined {
+  public getIssuer(): Issuer<BaseClient> | undefined {
     return this.issuer;
   }
 
-  getClient(): BaseClient | undefined {
+  public getClient(): BaseClient | undefined {
     return this.client;
   }
 }

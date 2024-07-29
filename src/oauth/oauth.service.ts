@@ -5,8 +5,7 @@ import {
   OIDC_PROVIDER_MODULE,
   OidcProviderModule,
 } from './oauth.provider-module';
-import oauthConfig from './oauth.config';
-import base64url from 'base64url';
+import { OauthConfig } from './oauth.config';
 
 @Injectable()
 export class OauthService {
@@ -25,21 +24,16 @@ export class OauthService {
     private configService: ConfigService,
     @Inject(OIDC_PROVIDER_MODULE)
     private readonly oidcProviderModule: OidcProviderModule,
+    private oauthConfig: OauthConfig,
   ) {
     this.logger.log('Creating OAuth/OIDC provider');
 
     const issuer = `${this.issuerProtocol}://${this.issuerHost}:${this.issuerPort}`;
 
-    oauthConfig.renderError = async (ctx, out, error) => {
-      ctx.res.statusCode = 302;
-      ctx.res.setHeader(
-        'Location',
-        `/client/auth/error?error=${base64url.encode(JSON.stringify(error))}`,
-      );
-      ctx.res.end();
-    };
-
-    this.provider = new oidcProviderModule.Provider(issuer, oauthConfig);
+    this.provider = new oidcProviderModule.Provider(
+      issuer,
+      oauthConfig.getOauthConfig(),
+    );
   }
 
   public getProvider() {
