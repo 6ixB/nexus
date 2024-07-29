@@ -7,7 +7,7 @@ import { parse } from 'url';
 export class ClientController {
   private readonly logger = new Logger(ClientController.name);
 
-  constructor(private clientService: ClientService) {}
+  constructor(private readonly clientService: ClientService) {}
 
   @Get()
   root(@Req() req: express.Request, @Res() res: express.Response) {

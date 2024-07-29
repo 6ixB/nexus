@@ -8,6 +8,7 @@ import {
   Post,
   Body,
   UseGuards,
+  HttpCode,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -18,6 +19,8 @@ import { AuthInteractionDto } from './dto/auth-interaction.dto';
 import { InteractionResults } from 'oidc-provider';
 import assert from 'assert';
 import { OauthGuard } from './guards/oauth.guard';
+import { AuthSignInDto } from './dto/auth-signin.dto';
+import { PrismaService } from 'nestjs-prisma';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -25,16 +28,23 @@ export class AuthController {
   private readonly logger = new Logger(AuthController.name);
 
   constructor(
+    private readonly prismaService: PrismaService,
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
-    private readonly oidcService: OauthService,
+    private readonly oauthService: OauthService,
   ) {}
+
+  @Post('signin')
+  @HttpCode(HttpStatus.CREATED)
+  async signIn(@Body() authSignInDto: AuthSignInDto) {
+    return await this.authService.authenticate(authSignInDto);
+  }
 
   @Get('interactions/:uid')
   async getInteractionDetails(@Req() req: Request, @Res() res: Response) {
     this.logger.log(`getInteractionDetails for ${req.params.uid}`);
 
-    const oidcProvider = this.oidcService.getProvider();
+    const oidcProvider = this.oauthService.getProvider();
     const interactionDetails = await oidcProvider.interactionDetails(req, res);
 
     res
@@ -57,7 +67,7 @@ export class AuthController {
     this.logger.log('interceptedCookies: ', req.cookies);
     this.logger.log('interactionResult: ', authInteractionDto);
 
-    const oidcProvider = this.oidcService.getProvider();
+    const oidcProvider = this.oauthService.getProvider();
 
     const redirectTo = await oidcProvider.interactionResult(
       req,
@@ -86,7 +96,7 @@ export class AuthController {
     this.logger.log(`confirmInteraction for ${req.params.uid}`);
     this.logger.log('interceptedCookies: ', req.cookies);
 
-    const oidcProvider = this.oidcService.getProvider();
+    const oidcProvider = this.oauthService.getProvider();
     const interactionDetails = await oidcProvider.interactionDetails(req, res);
 
     const {
@@ -166,7 +176,7 @@ export class AuthController {
     this.logger.log(`abortInteraction for ${req.params.uid}`);
     this.logger.log('interceptedCookies: ', req.cookies);
 
-    const oidcProvider = this.oidcService.getProvider();
+    const oidcProvider = this.oauthService.getProvider();
 
     const result = {
       error: 'access_denied',

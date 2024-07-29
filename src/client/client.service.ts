@@ -19,7 +19,7 @@ export class ClientService implements OnModuleInit {
 
   private nextApp: NextServer;
 
-  constructor(private configService: ConfigService) {
+  constructor(private readonly configService: ConfigService) {
     this.logger.log('Creating Next.js application');
     this.logger.log(`Development mode: ${this.dev}`);
     this.logger.log(`Hostname: ${this.hostname}`);

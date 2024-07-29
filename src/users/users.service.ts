@@ -9,7 +9,7 @@ import { UserEntity } from './entities/user.entity';
 export class UsersService {
   private readonly logger = new Logger(UsersService.name);
 
-  constructor(private prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity | null> {
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);

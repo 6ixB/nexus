@@ -1,10 +1,20 @@
-import { Module } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  Module,
+  ValidationPipe,
+} from '@nestjs/common';
 import { OauthModule } from './oauth/oauth.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ClientModule } from './client/client.module';
-import { APP_FILTER, HttpAdapterHost } from '@nestjs/core';
+import {
+  APP_FILTER,
+  APP_INTERCEPTOR,
+  APP_PIPE,
+  HttpAdapterHost,
+  Reflector,
+} from '@nestjs/core';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
 
 @Module({
@@ -19,6 +29,16 @@ import { PrismaClientExceptionFilter } from 'nestjs-prisma';
     ClientModule,
   ],
   providers: [
+    {
+      provide: APP_PIPE,
+      useValue: new ValidationPipe({ whitelist: true, transform: true }),
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useFactory: (reflector: Reflector) =>
+        new ClassSerializerInterceptor(reflector),
+      inject: [Reflector],
+    },
     {
       provide: APP_FILTER,
       useFactory: ({ httpAdapter }: HttpAdapterHost) => {

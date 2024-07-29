@@ -11,6 +11,8 @@ import {
   UsePipes,
   ValidationPipe,
   Logger,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -32,27 +34,35 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   @ApiCreatedResponse({
     description: 'The user has been successfully created.',
   })
   @ApiBody({ type: CreateUserDto })
   async create(@Body() createUserDto: CreateUserDto) {
+    // Artificial delay to simulate a slow network
+    // TODO: Remove this in production
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     return await this.usersService.create(createUserDto);
   }
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   @ApiOkResponse()
   async findAll() {
     return await this.usersService.findAll();
   }
 
   @Get(':id')
+  @HttpCode(HttpStatus.OK)
   @ApiOkResponse()
   async findOne(@Param('id') id: string) {
     return await this.usersService.findOne(id);
   }
 
   @Patch(':id')
+  @HttpCode(HttpStatus.CREATED)
   @ApiCreatedResponse({
     description: 'The user has been successfully updated.',
   })
@@ -62,6 +72,7 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ description: 'The user has been successfully deleted.' })
   async remove(@Param('id') id: string) {
     return await this.usersService.remove(id);

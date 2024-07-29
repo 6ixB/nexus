@@ -1,5 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { BaseClient, Issuer } from 'openid-client';
+import { AuthSignInDto } from './dto/auth-signin.dto';
+import { PrismaService } from 'nestjs-prisma';
+import * as bcrypt from 'bcrypt';
+import { UserEntity } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -7,6 +11,8 @@ export class AuthService {
 
   private issuer: Issuer<BaseClient> | undefined;
   private client: BaseClient | undefined;
+
+  constructor(private readonly prismaService: PrismaService) {}
 
   public async initialize() {
     const issuer = await Issuer.discover('http://localhost:3000/oauth');
@@ -35,5 +41,29 @@ export class AuthService {
 
   public getClient(): BaseClient | undefined {
     return this.client;
+  }
+
+  public async authenticate(authSignInDto: AuthSignInDto): Promise<UserEntity> {
+    this.logger.log(`Attempting to authenticate ${authSignInDto.email}`);
+
+    const { email, password } = authSignInDto;
+
+    const user = await this.prismaService.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    this.logger.log(`Authentication successful for ${email}`);
+
+    return new UserEntity(user);
   }
 }

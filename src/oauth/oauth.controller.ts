@@ -8,11 +8,11 @@ import { ApiTags } from '@nestjs/swagger';
 export class OauthController {
   private readonly logger = new Logger(OauthController.name);
 
-  constructor(private readonly oidcService: OauthService) {}
+  constructor(private readonly oauthService: OauthService) {}
 
   @All('*')
   handleOidc(@Req() req: Request, @Res() res: Response) {
-    const oauthProvider = this.oidcService.getProvider();
+    const oauthProvider = this.oauthService.getProvider();
     const oauthCallback = oauthProvider.callback();
 
     req.url = req.originalUrl.replace('/oauth', '');

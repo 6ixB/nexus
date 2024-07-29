@@ -26,8 +26,8 @@ export class OauthConfig {
   private readonly oauthConfig: Configuration;
 
   constructor(
-    private configService: ConfigService,
-    private prismaService: PrismaService,
+    private readonly configService: ConfigService,
+    private readonly prismaService: PrismaService,
   ) {
     this.clients = [
       // Dummy client for testing

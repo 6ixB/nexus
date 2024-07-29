@@ -1,4 +1,4 @@
-import { AuthSignInDtoSchema } from '@/lib/schema/auth.schema';
+import { AuthSignInDto, AuthSignInDtoSchema } from '@/lib/schema/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -32,31 +32,68 @@ export default function SignInForm({ interactionUid }: SignInFormProps) {
 
   const router = useRouter();
 
+  const {
+    mutateAsync: signInInteractionMutateAsync,
+    isPending: signInInteractionMutationIsPending,
+  } = useMutation({
+    mutationFn: async (authInteractionDto: any) => {
+      const response = await fetch(
+        `/auth/interactions/${interactionUid}/signin`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(authInteractionDto),
+        },
+      );
+
+      const data = await response.json();
+
+      return data;
+    },
+    onSuccess: (data) => {
+      const { redirectTo } = data;
+
+      if (redirectTo) {
+        router.push(redirectTo);
+      }
+    },
+    onError: (error) => {
+      form.setError('root', {
+        type: 'manual',
+        message: error.message,
+      });
+    },
+  });
+
   const { mutateAsync: signInMutateAsync, isPending: signInMutationIsPending } =
     useMutation({
-      mutationFn: async (authInteractionDto: any) => {
-        const response = await fetch(
-          `/auth/interactions/${interactionUid}/signin`,
-          {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(authInteractionDto),
+      mutationFn: async (authSignInDto: AuthSignInDto) => {
+        const response = await fetch('/auth/signin', {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
           },
-        );
+          body: JSON.stringify(authSignInDto),
+        });
 
         const data = await response.json();
 
         return data;
       },
-      onSuccess: (data) => {
-        const { redirectTo } = data;
+      onSuccess: async (data) => {
+        const { email } = data;
 
-        if (redirectTo) {
-          router.push(redirectTo);
-        }
+        const authInteractionDto = {
+          login: {
+            accountId: email,
+          },
+        };
+
+        await signInInteractionMutateAsync(authInteractionDto);
       },
       onError: (error) => {
         form.setError('root', {
@@ -67,22 +104,16 @@ export default function SignInForm({ interactionUid }: SignInFormProps) {
     });
 
   async function onSubmit(values: z.infer<typeof AuthSignInDtoSchema>) {
-    const { email } = values;
+    try {
+      const authSignInDto = AuthSignInDtoSchema.parse(values);
 
-    // TODO: Implement actual authentication logic
-
-    if (!interactionUid) {
-      // TODO: Implement non-delegated authorization sign-in
-      return;
+      await signInMutateAsync(authSignInDto);
+    } catch (error) {
+      form.setError('root', {
+        type: 'manual',
+        message: error.message,
+      });
     }
-
-    const authInteractionDto = {
-      login: {
-        accountId: email,
-      },
-    };
-
-    await signInMutateAsync(authInteractionDto);
   }
 
   return (
@@ -141,7 +172,7 @@ export default function SignInForm({ interactionUid }: SignInFormProps) {
           type="submit"
           className="w-full text-base text-white dark:text-black"
         >
-          {signInMutationIsPending ? (
+          {signInMutationIsPending || signInInteractionMutationIsPending ? (
             <LoadingSpinner className="size-6 text-white dark:text-black" />
           ) : (
             'Sign in'

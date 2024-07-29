@@ -7,7 +7,7 @@ import { Strategy } from 'openid-client';
 export class OauthStrategy {
   private logger = new Logger(OauthStrategy.name);
 
-  constructor(private authService: AuthService) {
+  constructor(private readonly authService: AuthService) {
     passport.serializeUser((user, done) => {
       this.logger.log(`serializeUser: ${JSON.stringify(user)}`);
       done(null, user);

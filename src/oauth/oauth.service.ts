@@ -21,10 +21,10 @@ export class OauthService {
   private readonly issuerPort = this.configService.get<string>('SERVER_PORT');
 
   constructor(
-    private configService: ConfigService,
+    private readonly configService: ConfigService,
     @Inject(OIDC_PROVIDER_MODULE)
     private readonly oidcProviderModule: OidcProviderModule,
-    private oauthConfig: OauthConfig,
+    private readonly oauthConfig: OauthConfig,
   ) {
     this.logger.log('Creating OAuth/OIDC provider');
 
