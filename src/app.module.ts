@@ -18,6 +18,8 @@ import {
 import { PrismaClientExceptionFilter, PrismaModule } from 'nestjs-prisma';
 import { NestSessionOptions, SessionModule } from 'nestjs-session';
 import { CommonModule } from './common/common.module';
+import { PrismaSessionStore } from '@quixo3/prisma-session-store';
+import { PrismaClient } from '@prisma/client';
 
 @Module({
   imports: [
@@ -42,6 +44,11 @@ import { CommonModule } from './common/common.module';
             secret: configService.get<string>('OAUTH_SESSION_SECRET'),
             resave: false,
             saveUninitialized: true,
+            store: new PrismaSessionStore(new PrismaClient(), {
+              checkPeriod: 2 * 60 * 1000, //ms
+              dbRecordIdIsSessionId: true,
+              dbRecordIdFunction: undefined,
+            }),
           },
         };
       },

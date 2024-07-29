@@ -32,3 +32,10 @@ model OidcModel {
     @@unique([id, type])
     @@map("oidc_model")
 }
+
+model Session {
+    id        String   @id
+    sid       String   @unique
+    data      String
+    expiresAt DateTime
+}
