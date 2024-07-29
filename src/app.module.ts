@@ -4,7 +4,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { OauthModule } from './oauth/oauth.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ClientModule } from './client/client.module';
@@ -16,6 +16,8 @@ import {
   Reflector,
 } from '@nestjs/core';
 import { PrismaClientExceptionFilter, PrismaModule } from 'nestjs-prisma';
+import { NestSessionOptions, SessionModule } from 'nestjs-session';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -29,10 +31,27 @@ import { PrismaClientExceptionFilter, PrismaModule } from 'nestjs-prisma';
         explicitConnect: true,
       },
     }),
+    SessionModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (
+        configService: ConfigService,
+      ): Promise<NestSessionOptions> => {
+        return {
+          session: {
+            secret: configService.get<string>('OAUTH_SESSION_SECRET'),
+            resave: false,
+            saveUninitialized: true,
+          },
+        };
+      },
+    }),
+    CommonModule,
     UsersModule,
     OauthModule,
     AuthModule,
     ClientModule,
+    CommonModule,
   ],
   providers: [
     {
@@ -41,16 +60,16 @@ import { PrismaClientExceptionFilter, PrismaModule } from 'nestjs-prisma';
     },
     {
       provide: APP_INTERCEPTOR,
+      inject: [Reflector],
       useFactory: (reflector: Reflector) =>
         new ClassSerializerInterceptor(reflector),
-      inject: [Reflector],
     },
     {
       provide: APP_FILTER,
+      inject: [HttpAdapterHost],
       useFactory: ({ httpAdapter }: HttpAdapterHost) => {
         return new PrismaClientExceptionFilter(httpAdapter);
       },
-      inject: [HttpAdapterHost],
     },
   ],
 })

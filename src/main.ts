@@ -4,8 +4,6 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AuthService } from './auth/auth.service';
 import { OauthStrategy } from './auth/strategies/oauth.strategy';
-import session from 'express-session';
-import passport from 'passport';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -20,18 +18,10 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  app.use(
-    session({
-      secret: process.env.OAUTH_SESSION_SECRET,
-      resave: false,
-      saveUninitialized: true,
-    }),
-  );
-  app.use(passport.initialize());
-  app.use(passport.session());
-
   await app.listen(3000);
 
+  // Initialize the auth service that will use its own OAuth2/OIDC provider to authenticate users
+  // AuthService is a client of OAuthService, so intialization of AuthService is deferred until the OAuthService is initialized
   const authService = app.get(AuthService);
   await authService.initialize();
 
