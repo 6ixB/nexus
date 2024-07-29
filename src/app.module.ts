@@ -15,13 +15,19 @@ import {
   HttpAdapterHost,
   Reflector,
 } from '@nestjs/core';
-import { PrismaClientExceptionFilter } from 'nestjs-prisma';
+import { PrismaClientExceptionFilter, PrismaModule } from 'nestjs-prisma';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env', '.env.development.local'],
+    }),
+    PrismaModule.forRoot({
+      isGlobal: true,
+      prismaServiceOptions: {
+        explicitConnect: true,
+      },
     }),
     UsersModule,
     OauthModule,

@@ -4,10 +4,9 @@ import { AuthController } from './auth.controller';
 import { OauthModule } from 'src/oauth/oauth.module';
 import { UsersModule } from 'src/users/users.module';
 import { OauthStrategy } from './strategies/oauth.strategy';
-import { PrismaModule } from 'nestjs-prisma';
 
 @Module({
-  imports: [PrismaModule, UsersModule, OauthModule],
+  imports: [UsersModule, OauthModule],
   controllers: [AuthController],
   providers: [AuthService, OauthStrategy],
   exports: [OauthStrategy],
