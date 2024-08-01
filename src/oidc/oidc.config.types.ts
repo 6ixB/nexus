@@ -10,13 +10,13 @@ import {
   KoaContextWithOIDC,
 } from 'oidc-provider';
 
-export type OauthClients = ClientMetadata[];
+export type OidcClients = ClientMetadata[];
 
-export type OauthAdapter = AdapterConstructor | AdapterFactory | undefined;
+export type OidcAdapter = AdapterConstructor | AdapterFactory | undefined;
 
-export type OauthFindAccount = FindAccount | undefined;
+export type OidcFindAccount = FindAccount | undefined;
 
-export type OauthCookies =
+export type OidcCookies =
   | {
       names?:
         | {
@@ -32,7 +32,7 @@ export type OauthCookies =
     }
   | undefined;
 
-export type OauthRenderError =
+export type OidcRenderError =
   | ((
       ctx: KoaContextWithOIDC,
       out: ErrorOut,

@@ -7,7 +7,7 @@ import Providers from '@/components/base/providers';
 export const metadata: Metadata = {
   title: 'Nexus',
   description:
-    'A Simple Identity Provider, OAuth 2.0 and OpenID Connect Authorization Server for your applications',
+    'A Simple Identity Provider and OpenID Connect Authorization Server for your applications',
 };
 
 export default function RootLayout({

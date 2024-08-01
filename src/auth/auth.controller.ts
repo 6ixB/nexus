@@ -12,13 +12,13 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { OauthService } from 'src/oauth/oauth.service';
+import { OidcService } from 'src/oidc/oidc.service';
 import { UsersService } from 'src/users/users.service';
 import { Request, Response } from 'express';
 import { AuthInteractionDto } from './dto/auth-interaction.dto';
 import { InteractionResults } from 'oidc-provider';
 import assert from 'assert';
-import { OauthGuard } from './guards/oauth.guard';
+import { OidcGuard } from './guards/oidc.guard';
 import { AuthSignInDto } from './dto/auth-signin.dto';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -31,7 +31,7 @@ export class AuthController {
     private readonly prismaService: PrismaService,
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
-    private readonly oauthService: OauthService,
+    private readonly oidcService: OidcService,
   ) {}
 
   @Post('signin')
@@ -44,7 +44,7 @@ export class AuthController {
   async getInteractionDetails(@Req() req: Request, @Res() res: Response) {
     this.logger.log(`getInteractionDetails for ${req.params.uid}`);
 
-    const oidcProvider = this.oauthService.getProvider();
+    const oidcProvider = this.oidcService.getProvider();
     const interactionDetails = await oidcProvider.interactionDetails(req, res);
 
     res
@@ -67,7 +67,7 @@ export class AuthController {
     this.logger.log('interceptedCookies: ', req.cookies);
     this.logger.log('interactionResult: ', authInteractionDto);
 
-    const oidcProvider = this.oauthService.getProvider();
+    const oidcProvider = this.oidcService.getProvider();
 
     const redirectTo = await oidcProvider.interactionResult(
       req,
@@ -96,7 +96,7 @@ export class AuthController {
     this.logger.log(`confirmInteraction for ${req.params.uid}`);
     this.logger.log('interceptedCookies: ', req.cookies);
 
-    const oidcProvider = this.oauthService.getProvider();
+    const oidcProvider = this.oidcService.getProvider();
     const interactionDetails = await oidcProvider.interactionDetails(req, res);
 
     const {
@@ -176,7 +176,7 @@ export class AuthController {
     this.logger.log(`abortInteraction for ${req.params.uid}`);
     this.logger.log('interceptedCookies: ', req.cookies);
 
-    const oidcProvider = this.oauthService.getProvider();
+    const oidcProvider = this.oidcService.getProvider();
 
     const result = {
       error: 'access_denied',
@@ -203,7 +203,7 @@ export class AuthController {
 
   // TODO: Fully implement this callback route handler
   @Get('callback')
-  @UseGuards(OauthGuard)
+  @UseGuards(OidcGuard)
   callback(@Req() req: Request) {
     return req.user;
   }

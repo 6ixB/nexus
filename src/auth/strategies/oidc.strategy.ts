@@ -4,8 +4,8 @@ import passport from 'passport';
 import { Strategy } from 'openid-client';
 
 @Injectable()
-export class OauthStrategy {
-  private logger = new Logger(OauthStrategy.name);
+export class OidcStrategy {
+  private logger = new Logger(OidcStrategy.name);
 
   constructor(private readonly authService: AuthService) {
     passport.serializeUser((user, done) => {
@@ -23,9 +23,9 @@ export class OauthStrategy {
     const client = this.authService.getClient();
 
     passport.use(
-      'oauth',
+      'oidc',
       new Strategy({ client }, (tokenSet, userinfo, done) => {
-        this.logger.log('Using OAuth strategy');
+        this.logger.log('Using OIDC strategy');
         this.logger.log(`tokenSet: ${JSON.stringify(tokenSet)}`);
         this.logger.log(`userinfo: ${JSON.stringify(userinfo)}`);
         return done(null, userinfo);

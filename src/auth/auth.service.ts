@@ -4,6 +4,7 @@ import { AuthSignInDto } from './dto/auth-signin.dto';
 import { PrismaService } from 'nestjs-prisma';
 import * as bcrypt from 'bcrypt';
 import { UserEntity } from 'src/users/entities/user.entity';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -12,14 +13,21 @@ export class AuthService {
   private issuer: Issuer<BaseClient> | undefined;
   private client: BaseClient | undefined;
 
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly prismaService: PrismaService,
+  ) {}
 
   public async initialize() {
-    const issuer = await Issuer.discover('http://localhost:3000/oauth');
+    const issuer = await Issuer.discover(
+      this.configService.get<string>('OIDC_CLIENT_ISSUER'),
+    );
     const client = new issuer.Client({
-      client_id: process.env.OAUTH_CLIENT_ID,
-      client_secret: process.env.OAUTH_CLIENT_SECRET,
-      redirect_uris: [process.env.OAUTH_CLIENT_REDIRECT_URI],
+      client_id: this.configService.get<string>('OIDC_CLIENT_ID'),
+      client_secret: this.configService.get<string>('OIDC_CLIENT_SECRET'),
+      redirect_uris: [
+        this.configService.get<string>('OIDC_CLIENT_REDIRECT_URI'),
+      ],
       response_types: ['code'],
     });
 

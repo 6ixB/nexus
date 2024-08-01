@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { OauthModule } from 'src/oauth/oauth.module';
+import { OidcModule } from 'src/oidc/oidc.module';
 import { UsersModule } from 'src/users/users.module';
-import { OauthStrategy } from './strategies/oauth.strategy';
+import { OidcStrategy } from './strategies/oidc.strategy';
 
 @Module({
-  imports: [UsersModule, OauthModule],
+  imports: [UsersModule, OidcModule],
   controllers: [AuthController],
-  providers: [AuthService, OauthStrategy],
-  exports: [OauthStrategy],
+  providers: [AuthService, OidcStrategy],
+  exports: [OidcStrategy],
 })
 export class AuthModule {}

@@ -4,12 +4,12 @@ import Provider from 'oidc-provider';
 import {
   OIDC_PROVIDER_MODULE,
   OidcProviderModule,
-} from './oauth.provider-module';
-import { OauthConfig } from './oauth.config';
+} from './oidc.provider-module';
+import { OidcConfig } from './oidc.config';
 
 @Injectable()
-export class OauthService {
-  private logger = new Logger(OauthService.name);
+export class OidcService {
+  private logger = new Logger(OidcService.name);
 
   private readonly provider: Provider;
 
@@ -24,15 +24,15 @@ export class OauthService {
     private readonly configService: ConfigService,
     @Inject(OIDC_PROVIDER_MODULE)
     private readonly oidcProviderModule: OidcProviderModule,
-    private readonly oauthConfig: OauthConfig,
+    private readonly oidcConfig: OidcConfig,
   ) {
-    this.logger.log('Creating OAuth/OIDC provider');
+    this.logger.log('Creating OIDC provider');
 
     const issuer = `${this.issuerProtocol}://${this.issuerHost}:${this.issuerPort}`;
 
     this.provider = new oidcProviderModule.Provider(
       issuer,
-      oauthConfig.getOauthConfig(),
+      oidcConfig.getOidcConfig(),
     );
   }
 

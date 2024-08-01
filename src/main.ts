@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AuthService } from './auth/auth.service';
-import { OauthStrategy } from './auth/strategies/oauth.strategy';
+import { OidcStrategy } from './auth/strategies/oidc.strategy';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -20,13 +20,13 @@ async function bootstrap() {
 
   await app.listen(3000);
 
-  // Initialize the auth service that will use its own OAuth2/OIDC provider to authenticate users
-  // AuthService is a client of OAuthService, so intialization of AuthService is deferred until the OAuthService is initialized
+  // Initialize the auth service that will use its own OIDC provider to authenticate users
+  // AuthService is a client of OidcService, so intialization of AuthService is deferred until the OidcService is initialized
   const authService = app.get(AuthService);
   await authService.initialize();
 
-  const oauthStrategy = app.get(OauthStrategy);
-  oauthStrategy.initialize();
+  const oidcStrategy = app.get(OidcStrategy);
+  oidcStrategy.initialize();
 }
 
 bootstrap();

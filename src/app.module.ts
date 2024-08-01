@@ -3,7 +3,7 @@ import {
   Module,
   ValidationPipe,
 } from '@nestjs/common';
-import { OauthModule } from './oauth/oauth.module';
+import { OidcModule } from './oidc/oidc.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
@@ -15,11 +15,14 @@ import {
   HttpAdapterHost,
   Reflector,
 } from '@nestjs/core';
-import { PrismaClientExceptionFilter, PrismaModule } from 'nestjs-prisma';
+import {
+  PrismaClientExceptionFilter,
+  PrismaModule,
+  PrismaService,
+} from 'nestjs-prisma';
 import { NestSessionOptions, SessionModule } from 'nestjs-session';
 import { CommonModule } from './common/common.module';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
-import { PrismaClient } from '@prisma/client';
 
 @Module({
   imports: [
@@ -34,18 +37,19 @@ import { PrismaClient } from '@prisma/client';
       },
     }),
     SessionModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
+      imports: [ConfigModule, PrismaModule],
+      inject: [ConfigService, PrismaService],
       useFactory: async (
         configService: ConfigService,
+        prismaService: PrismaService,
       ): Promise<NestSessionOptions> => {
         return {
           session: {
-            secret: configService.get<string>('OAUTH_SESSION_SECRET'),
+            secret: configService.get<string>('OIDC_SESSION_SECRET'),
             resave: false,
             saveUninitialized: true,
-            store: new PrismaSessionStore(new PrismaClient(), {
-              checkPeriod: 2 * 60 * 1000, //ms
+            store: new PrismaSessionStore(prismaService, {
+              checkPeriod: 2 * 60 * 1000,
               dbRecordIdIsSessionId: true,
               dbRecordIdFunction: undefined,
             }),
@@ -55,7 +59,7 @@ import { PrismaClient } from '@prisma/client';
     }),
     CommonModule,
     UsersModule,
-    OauthModule,
+    OidcModule,
     AuthModule,
     ClientModule,
     CommonModule,

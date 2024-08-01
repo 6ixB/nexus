@@ -45,7 +45,7 @@ const expiresAt = (expiresIn?: number) =>
 
 export class PrismaAdapter implements Adapter {
   type: number;
-  private logger = new Logger(`Oauth${PrismaAdapter.name}`);
+  private logger = new Logger(`Oidc${PrismaAdapter.name}`);
 
   constructor(name: string) {
     this.type = types[name];

@@ -7,8 +7,8 @@ import {
 import { Request, Response, NextFunction } from 'express';
 
 @Injectable()
-export class OauthMiddleware implements NestMiddleware {
-  private readonly logger = new Logger(OauthMiddleware.name);
+export class OidcMiddleware implements NestMiddleware {
+  private readonly logger = new Logger(OidcMiddleware.name);
 
   use(req: Request, res: Response, next: NextFunction) {
     // Prevent requests with the query parameter '_rsc' from the Next.js app

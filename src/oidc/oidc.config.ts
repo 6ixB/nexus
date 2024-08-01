@@ -1,29 +1,29 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Configuration } from 'oidc-provider';
-import PrismaAdapter from 'src/oauth/adapters/prisma.oauth-adapter';
+import PrismaAdapter from 'src/oidc/adapters/prisma.oidc-adapter';
 import {
-  OauthAdapter,
-  OauthClients,
-  OauthCookies,
-  OauthFindAccount,
-  OauthRenderError,
-} from './oauth.config.types';
+  OidcAdapter,
+  OidcClients,
+  OidcCookies,
+  OidcFindAccount,
+  OidcRenderError,
+} from './oidc.config.types';
 import base64url from 'base64url';
 import { PrismaService } from 'nestjs-prisma';
 
 @Injectable()
-export class OauthConfig {
-  private readonly logger = new Logger(OauthConfig.name);
+export class OidcConfig {
+  private readonly logger = new Logger(OidcConfig.name);
 
-  private clients: OauthClients;
-  private adapter: OauthAdapter;
-  private findAccount: OauthFindAccount;
+  private clients: OidcClients;
+  private adapter: OidcAdapter;
+  private findAccount: OidcFindAccount;
   private interactions;
   private features;
-  private cookies: OauthCookies;
-  private renderError: OauthRenderError;
-  private readonly oauthConfig: Configuration;
+  private cookies: OidcCookies;
+  private renderError: OidcRenderError;
+  private readonly oidcConfig: Configuration;
 
   constructor(
     private readonly configService: ConfigService,
@@ -40,10 +40,10 @@ export class OauthConfig {
       },
       // Itself as a client
       {
-        client_id: this.configService.get<string>('OAUTH_CLIENT_ID'),
-        client_secret: this.configService.get<string>('OAUTH_CLIENT_SECRET'),
+        client_id: this.configService.get<string>('OIDC_CLIENT_ID'),
+        client_secret: this.configService.get<string>('OIDC_CLIENT_SECRET'),
         redirect_uris: [
-          this.configService.get<string>('OAUTH_CLIENT_REDIRECT_URI'),
+          this.configService.get<string>('OIDC_CLIENT_REDIRECT_URI'),
         ],
         grant_types: ['authorization_code'],
         response_types: ['code'],
@@ -118,7 +118,7 @@ export class OauthConfig {
       ctx.res.end();
     };
 
-    this.oauthConfig = {
+    this.oidcConfig = {
       clients: this.clients,
       adapter: this.adapter,
       findAccount: this.findAccount,
@@ -129,7 +129,7 @@ export class OauthConfig {
     };
   }
 
-  public getOauthConfig(): Configuration {
-    return this.oauthConfig;
+  public getOidcConfig(): Configuration {
+    return this.oidcConfig;
   }
 }
