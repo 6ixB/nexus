@@ -43,9 +43,9 @@ const prepare = (doc: OidcModel) => {
 const expiresAt = (expiresIn?: number) =>
   expiresIn ? new Date(Date.now() + expiresIn * 1000) : null;
 
-export class PrismaAdapter implements Adapter {
-  type: number;
-  private logger = new Logger(`Oidc${PrismaAdapter.name}`);
+export class OidcPrismaAdapter implements Adapter {
+  private type: number;
+  private logger = new Logger(OidcPrismaAdapter.name);
 
   constructor(name: string) {
     this.type = types[name];
@@ -194,4 +194,4 @@ export class PrismaAdapter implements Adapter {
   }
 }
 
-export default PrismaAdapter;
+export default OidcPrismaAdapter;

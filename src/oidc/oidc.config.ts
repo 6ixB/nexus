@@ -1,7 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Configuration } from 'oidc-provider';
-import PrismaAdapter from 'src/oidc/adapters/prisma.oidc-adapter';
+import OidcPrismaAdapter from './adapters/prisma.oidc-adapter';
+import { PrismaService } from 'nestjs-prisma';
 import {
   OidcAdapter,
   OidcClients,
@@ -10,7 +11,6 @@ import {
   OidcRenderError,
 } from './oidc.config.types';
 import base64url from 'base64url';
-import { PrismaService } from 'nestjs-prisma';
 
 @Injectable()
 export class OidcConfig {
@@ -50,7 +50,7 @@ export class OidcConfig {
       },
     ];
 
-    this.adapter = PrismaAdapter;
+    this.adapter = OidcPrismaAdapter;
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     this.findAccount = async (ctx, sub, token) => {

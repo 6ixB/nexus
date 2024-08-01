@@ -47,7 +47,7 @@ import { PrismaSessionStore } from '@quixo3/prisma-session-store';
           session: {
             secret: configService.get<string>('OIDC_SESSION_SECRET'),
             resave: false,
-            saveUninitialized: true,
+            saveUninitialized: false,
             store: new PrismaSessionStore(prismaService, {
               checkPeriod: 2 * 60 * 1000,
               dbRecordIdIsSessionId: true,
