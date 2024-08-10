@@ -40,7 +40,7 @@ export class UsersController {
   })
   @ApiBody({ type: CreateUserDto })
   async create(@Body() createUserDto: CreateUserDto) {
-    // Artificial delay to simulate a slow network
+    // Artificial delay
     // TODO: Remove this in production
     await new Promise((resolve) => setTimeout(resolve, 1000));
 

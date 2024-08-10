@@ -1,9 +1,10 @@
 'use client';
 
-import { CreateUserDto, CreateUserDtoSchema } from '@/lib/schema/user.schema';
+import type { CreateUserDto } from '@/lib/schema/user.schema';
+import { CreateUserDtoSchema } from '@/lib/schema/user.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import type { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import {
   Form,

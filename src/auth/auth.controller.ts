@@ -9,6 +9,8 @@ import {
   Body,
   UseGuards,
   HttpCode,
+  UnauthorizedException,
+  Session,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -16,7 +18,7 @@ import { OidcService } from 'src/oidc/oidc.service';
 import { UsersService } from 'src/users/users.service';
 import { Request, Response } from 'express';
 import { AuthInteractionDto } from './dto/auth-interaction.dto';
-import { InteractionResults } from 'oidc-provider';
+import type { InteractionResults } from 'oidc-provider';
 import assert from 'assert';
 import { OidcGuard } from './guards/oidc.guard';
 import { AuthSignInDto } from './dto/auth-signin.dto';
@@ -33,6 +35,12 @@ export class AuthController {
     private readonly usersService: UsersService,
     private readonly oidcService: OidcService,
   ) {}
+
+  @Get('signin')
+  @UseGuards(OidcGuard)
+  async signInOidc() {
+    return;
+  }
 
   @Post('signin')
   @HttpCode(HttpStatus.CREATED)
@@ -78,7 +86,7 @@ export class AuthController {
 
     this.logger.log('redirectTo: ', redirectTo);
 
-    // Artificial delay to simulate a slow network
+    // Artificial delay
     // TODO: Remove this in production
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -158,7 +166,7 @@ export class AuthController {
 
     this.logger.log('redirectTo: ', redirectTo);
 
-    // Artificial delay to simulate a slow network
+    // Artificial delay
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     res
@@ -192,7 +200,7 @@ export class AuthController {
 
     this.logger.log('redirectTo: ', redirectTo);
 
-    // Artificial delay to simulate a slow network
+    // Artificial delay
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     res
@@ -201,10 +209,41 @@ export class AuthController {
       .send({ redirectTo });
   }
 
-  // TODO: Fully implement this callback route handler
   @Get('callback')
+  @ApiResponse({
+    status: HttpStatus.FOUND,
+  })
   @UseGuards(OidcGuard)
-  callback(@Req() req: Request) {
-    return req.user;
+  async callback(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Session() session,
+  ) {
+    this.logger.log(req.isAuthenticated());
+
+    if (!req.isAuthenticated()) {
+      throw new UnauthorizedException();
+    }
+
+    const user = req.user;
+    session.user = user;
+
+    this.logger.log('User: ', user);
+
+    res.redirect('/client');
+  }
+
+  @Get('session/me')
+  @ApiResponse({
+    status: HttpStatus.OK,
+  })
+  async getSession(@Session() session, @Res() res: Response) {
+    const user = session.user ?? {};
+
+    res
+      .set('Content-Type', 'application/json')
+      .set('Cache-Control', 'no-store')
+      .status(HttpStatus.OK)
+      .send(user);
   }
 }

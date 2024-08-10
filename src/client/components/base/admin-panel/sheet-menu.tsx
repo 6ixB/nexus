@@ -19,19 +19,19 @@ export function SheetMenu() {
           <MenuIcon size={20} />
         </Button>
       </SheetTrigger>
-      <SheetContent className="sm:w-72 px-3 h-full flex flex-col" side="left">
+      <SheetContent className="flex h-full flex-col px-3 sm:w-72" side="left">
         <SheetHeader>
           <Button
-            className="flex justify-center items-center pb-2 pt-1"
+            className="flex items-center justify-center pb-2 pt-1"
             variant="link"
             asChild
           >
             <Link
               href="/dashboard"
-              className="flex justify-start items-center gap-2"
+              className="flex items-center justify-start gap-2"
             >
-              <Nexus className="w-6 h-6 mr-1" />
-              <h1 className="font-bold text-lg">Nexus</h1>
+              <Nexus className="mr-1 h-6 w-6" />
+              <h1 className="text-lg font-bold">Nexus</h1>
             </Link>
           </Button>
         </SheetHeader>

@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { ChevronDown, Dot, LucideIcon } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import { ChevronDown, Dot } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -58,14 +59,14 @@ export function CollapseMenuButton({
       className="w-full"
     >
       <CollapsibleTrigger
-        className="[&[data-state=open]>div>div>svg]:rotate-180 mb-1"
+        className="mb-1 [&[data-state=open]>div>div>svg]:rotate-180"
         asChild
       >
         <Button
           variant={active ? 'secondary' : 'ghost'}
-          className="w-full justify-start h-10"
+          className="h-10 w-full justify-start"
         >
-          <div className="w-full items-center flex justify-between">
+          <div className="flex w-full items-center justify-between">
             <div className="flex items-center">
               <span className="mr-4">
                 <Icon size={18} />
@@ -102,11 +103,11 @@ export function CollapseMenuButton({
           <Button
             key={index}
             variant={active ? 'secondary' : 'ghost'}
-            className="w-full justify-start h-10 mb-1"
+            className="mb-1 h-10 w-full justify-start"
             asChild
           >
             <Link href={href}>
-              <span className="mr-4 ml-2">
+              <span className="ml-2 mr-4">
                 <Dot size={18} />
               </span>
               <p
@@ -132,9 +133,9 @@ export function CollapseMenuButton({
             <DropdownMenuTrigger asChild>
               <Button
                 variant={active ? 'secondary' : 'ghost'}
-                className="w-full justify-start h-10 mb-1"
+                className="mb-1 h-10 w-full justify-start"
               >
-                <div className="w-full items-center flex justify-between">
+                <div className="flex w-full items-center justify-between">
                   <div className="flex items-center">
                     <span className={cn(isOpen === false ? '' : 'mr-4')}>
                       <Icon size={18} />

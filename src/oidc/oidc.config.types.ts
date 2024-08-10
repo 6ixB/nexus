@@ -1,4 +1,4 @@
-import {
+import type {
   AdapterConstructor,
   AdapterFactory,
   CanBePromise,
@@ -38,4 +38,12 @@ export type OidcRenderError =
       out: ErrorOut,
       error: errors.OIDCProviderError | Error,
     ) => CanBePromise<undefined | void>) // eslint-disable-line @typescript-eslint/no-invalid-void-type
+  | undefined;
+
+export type OidcScopes = string[] | undefined;
+
+export type OidcClaims =
+  | {
+      [key: string]: null | string[];
+    }
   | undefined;

@@ -1,4 +1,5 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import type { MiddlewareConsumer } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { OidcService } from './oidc.service';
 import { OidcController } from './oidc.controller';
 import { oidcProviderModuleFactory } from './oidc.provider-module';

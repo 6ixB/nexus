@@ -1,6 +1,7 @@
 import { Logger } from '@nestjs/common';
-import { PrismaClient, OidcModel, Prisma } from '@prisma/client';
-import { Adapter, AdapterPayload } from 'oidc-provider';
+import type { OidcModel, Prisma } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import type { Adapter, AdapterPayload } from 'oidc-provider';
 
 const prisma = new PrismaClient();
 

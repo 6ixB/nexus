@@ -1,6 +1,7 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
-import { BaseClient, Issuer } from 'openid-client';
-import { AuthSignInDto } from './dto/auth-signin.dto';
+import type { BaseClient } from 'openid-client';
+import { Issuer } from 'openid-client';
+import type { AuthSignInDto } from './dto/auth-signin.dto';
 import { PrismaService } from 'nestjs-prisma';
 import * as bcrypt from 'bcrypt';
 import { UserEntity } from 'src/users/entities/user.entity';

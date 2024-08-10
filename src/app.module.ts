@@ -20,8 +20,8 @@ import {
   PrismaModule,
   PrismaService,
 } from 'nestjs-prisma';
-import { NestSessionOptions, SessionModule } from 'nestjs-session';
-import { CommonModule } from './common/common.module';
+import type { NestSessionOptions } from 'nestjs-session';
+import { SessionModule } from 'nestjs-session';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 
 @Module({
@@ -53,16 +53,17 @@ import { PrismaSessionStore } from '@quixo3/prisma-session-store';
               dbRecordIdIsSessionId: true,
               dbRecordIdFunction: undefined,
             }),
+            cookie: {
+              maxAge: 60 * 60 * 1000,
+            },
           },
         };
       },
     }),
-    CommonModule,
     UsersModule,
     OidcModule,
     AuthModule,
     ClientModule,
-    CommonModule,
   ],
   providers: [
     {

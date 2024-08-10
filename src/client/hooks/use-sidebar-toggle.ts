@@ -12,11 +12,11 @@ export const useSidebarToggle = create(
       isOpen: true,
       setIsOpen: () => {
         set({ isOpen: !get().isOpen });
-      }
+      },
     }),
     {
       name: 'sidebarOpen',
-      storage: createJSONStorage(() => localStorage)
-    }
-  )
+      storage: createJSONStorage(() => localStorage),
+    },
+  ),
 );

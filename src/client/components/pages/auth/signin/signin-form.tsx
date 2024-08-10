@@ -1,7 +1,8 @@
-import { AuthSignInDto, AuthSignInDtoSchema } from '@/lib/schema/auth.schema';
+import type { AuthSignInDto } from '@/lib/schema/auth.schema';
+import { AuthSignInDtoSchema } from '@/lib/schema/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import type { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import {
   Form,

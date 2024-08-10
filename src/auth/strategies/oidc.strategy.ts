@@ -24,12 +24,25 @@ export class OidcStrategy {
 
     passport.use(
       'oidc',
-      new Strategy({ client }, (tokenSet, userinfo, done) => {
-        this.logger.log('Using OIDC strategy');
-        this.logger.log(`tokenSet: ${JSON.stringify(tokenSet)}`);
-        this.logger.log(`userinfo: ${JSON.stringify(userinfo)}`);
-        return done(null, userinfo);
-      }),
+      new Strategy(
+        {
+          client,
+          params: {
+            scope: 'openid profile email offline_access',
+            prompt: 'consent',
+          },
+          usePKCE: true,
+        },
+        (tokenSet, userInfo, done) => {
+          this.logger.log('Using OIDC strategy');
+          this.logger.log(`tokenSet: ${JSON.stringify(tokenSet)}`);
+          this.logger.log(`userinfo: ${JSON.stringify(userInfo)}`);
+
+          const user = { ...userInfo, tokenSet };
+
+          return done(null, user);
+        },
+      ),
     );
   }
 }

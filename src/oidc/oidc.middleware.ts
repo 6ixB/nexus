@@ -1,10 +1,6 @@
-import {
-  ForbiddenException,
-  Injectable,
-  Logger,
-  NestMiddleware,
-} from '@nestjs/common';
-import { Request, Response, NextFunction } from 'express';
+import type { NestMiddleware } from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
+import type { Request, Response, NextFunction } from 'express';
 
 @Injectable()
 export class OidcMiddleware implements NestMiddleware {

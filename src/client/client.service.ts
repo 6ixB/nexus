@@ -1,7 +1,8 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import type { OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import next from 'next';
-import { NextServer } from 'next/dist/server/next';
+import type { NextServer } from 'next/dist/server/next';
 import * as path from 'path';
 
 @Injectable()

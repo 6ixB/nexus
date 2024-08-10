@@ -1,14 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Configuration } from 'oidc-provider';
+import type { AccountClaims, Configuration } from 'oidc-provider';
 import OidcPrismaAdapter from './adapters/prisma.oidc-adapter';
 import { PrismaService } from 'nestjs-prisma';
-import {
+import type {
   OidcAdapter,
   OidcClients,
   OidcCookies,
   OidcFindAccount,
   OidcRenderError,
+  OidcScopes,
+  OidcClaims,
 } from './oidc.config.types';
 import base64url from 'base64url';
 
@@ -23,6 +25,8 @@ export class OidcConfig {
   private features;
   private cookies: OidcCookies;
   private renderError: OidcRenderError;
+  private scopes: OidcScopes;
+  private claims: OidcClaims;
   private readonly oidcConfig: Configuration;
 
   constructor(
@@ -30,25 +34,41 @@ export class OidcConfig {
     private readonly prismaService: PrismaService,
   ) {
     this.clients = [
-      // Dummy client for testing
-      {
-        client_id: 'foo',
-        client_secret: 'bar',
-        redirect_uris: ['https://oidcdebugger.com/debug'],
-        grant_types: ['authorization_code'],
-        response_types: ['code'],
-      },
-      // Itself as a client
       {
         client_id: this.configService.get<string>('OIDC_CLIENT_ID'),
         client_secret: this.configService.get<string>('OIDC_CLIENT_SECRET'),
         redirect_uris: [
           this.configService.get<string>('OIDC_CLIENT_REDIRECT_URI'),
         ],
-        grant_types: ['authorization_code'],
+        grant_types: ['authorization_code', 'refresh_token'],
         response_types: ['code'],
       },
     ];
+
+    this.scopes = ['openid', 'profile', 'email', 'offline_access'];
+
+    this.claims = {
+      openid: ['sub'],
+      email: ['email', 'email_verified'],
+      profile: [
+        'name',
+        'family_name',
+        'given_name',
+        'middle_name',
+        'nickname',
+        'preferred_username',
+        'profile',
+        'picture',
+        'website',
+        'gender',
+        'birthdate',
+        'zoneinfo',
+        'locale',
+        'updated_at',
+      ],
+      address: ['address'],
+      phone: ['phone_number', 'phone_number_verified'],
+    };
 
     this.adapter = OidcPrismaAdapter;
 
@@ -71,12 +91,42 @@ export class OidcConfig {
         accountId: sub,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         async claims(use, scope, claims, rejected) {
-          return {
-            sub: user.id,
+          console.log('Claims function called with:');
+          console.log(`Use: ${use}`);
+          console.log(`Scope: ${scope}`);
+          console.log(`Claims: ${JSON.stringify(claims)}`);
+          console.log(`Rejected: ${JSON.stringify(rejected)}`);
+
+          const allClaims = {
             email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
+            email_verified: false,
+            name: `${user.firstName} ${user.lastName}`,
+            given_name: user.firstName,
+            family_name: user.lastName,
           };
+
+          let scopeClaims: AccountClaims = { sub: user.id };
+
+          if (scope.includes('profile')) {
+            scopeClaims = {
+              ...scopeClaims,
+              name: allClaims.name,
+              given_name: allClaims.given_name,
+              family_name: allClaims.family_name,
+            };
+          }
+
+          if (scope.includes('email')) {
+            scopeClaims = {
+              ...scopeClaims,
+              email: allClaims.email,
+              email_verified: allClaims.email_verified,
+            };
+          }
+
+          console.log('Returning claims:', scopeClaims);
+
+          return scopeClaims;
         },
       };
     };
@@ -120,12 +170,14 @@ export class OidcConfig {
 
     this.oidcConfig = {
       clients: this.clients,
+      scopes: this.scopes,
       adapter: this.adapter,
       findAccount: this.findAccount,
       interactions: this.interactions,
       features: this.features,
       cookies: this.cookies,
       renderError: this.renderError,
+      claims: this.claims,
     };
   }
 
