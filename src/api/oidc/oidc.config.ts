@@ -13,6 +13,7 @@ import type {
   OidcClaims,
 } from './oidc.config.types';
 import base64url from 'base64url';
+import { ClientRoute } from 'src/client/client.routes';
 
 @Injectable()
 export class OidcConfig {
@@ -138,7 +139,7 @@ export class OidcConfig {
           interaction.uid,
         );
 
-        const url = `http://localhost:3000/client/auth/signin?interactionUid=${interaction.uid}`;
+        const url = `http://localhost:3000/auth/signin?interactionUid=${interaction.uid}`;
         this.logger.log('Generated URL:', url);
 
         return url;
@@ -163,7 +164,7 @@ export class OidcConfig {
       ctx.res.statusCode = 302;
       ctx.res.setHeader(
         'Location',
-        `/client/auth/error?error=${base64url.encode(JSON.stringify(error))}`,
+        `${ClientRoute.AUTH_ERROR}?error=${base64url.encode(JSON.stringify(error))}`,
       );
       ctx.res.end();
     };

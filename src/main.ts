@@ -2,8 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import type { NestExpressApplication } from '@nestjs/platform-express';
-import { AuthService } from './auth/auth.service';
-import { OidcStrategy } from './auth/strategies/oidc.strategy';
+import { AuthService } from './api/auth/auth.service';
+import { OidcStrategy } from './api/auth/strategies/oidc.strategy';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -16,7 +16,7 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api/docs', app, document);
 
   await app.listen(3000);
 

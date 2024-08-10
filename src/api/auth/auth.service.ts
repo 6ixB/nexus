@@ -4,7 +4,7 @@ import { Issuer } from 'openid-client';
 import type { AuthSignInDto } from './dto/auth-signin.dto';
 import { PrismaService } from 'nestjs-prisma';
 import * as bcrypt from 'bcrypt';
-import { UserEntity } from 'src/users/entities/user.entity';
+import { UserEntity } from 'src/api/users/entities/user.entity';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()

@@ -1,20 +1,25 @@
-export enum ClientRoutes {
+export enum ClientRoute {
+  // Auth
   AUTH_SIGNIN = '/auth/signin',
   AUTH_SIGNUP = '/auth/signup',
   AUTH_ERROR = '/auth/error',
-  HOME = '',
+
+  // Protected
+  HOME = '/',
+
+  // Static
   NEXT_STATIC = '/_next/*',
-  FAVICON = '/favicon.ico',
+  NEXT_FAVICON = '/favicon.ico',
 }
 
-const routes = {
+const clientRoutes = {
   auth: [
-    ClientRoutes.AUTH_SIGNIN,
-    ClientRoutes.AUTH_SIGNUP,
-    ClientRoutes.AUTH_ERROR,
+    ClientRoute.AUTH_SIGNIN,
+    ClientRoute.AUTH_SIGNUP,
+    ClientRoute.AUTH_ERROR,
   ],
-  protected: [ClientRoutes.HOME],
-  nextStatic: [ClientRoutes.NEXT_STATIC, ClientRoutes.FAVICON],
+  protected: [ClientRoute.HOME],
+  nextStatic: [ClientRoute.NEXT_STATIC, ClientRoute.NEXT_FAVICON],
 };
 
-export default routes;
+export default clientRoutes;

@@ -39,7 +39,7 @@ export default function SignInForm({ interactionUid }: SignInFormProps) {
   } = useMutation({
     mutationFn: async (authInteractionDto: any) => {
       const response = await fetch(
-        `/auth/interactions/${interactionUid}/signin`,
+        `/api/auth/interactions/${interactionUid}/signin`,
         {
           method: 'POST',
           credentials: 'include',
@@ -72,7 +72,7 @@ export default function SignInForm({ interactionUid }: SignInFormProps) {
   const { mutateAsync: signInMutateAsync, isPending: signInMutationIsPending } =
     useMutation({
       mutationFn: async (authSignInDto: AuthSignInDto) => {
-        const response = await fetch('/auth/signin', {
+        const response = await fetch('/api/auth/signin', {
           method: 'POST',
           credentials: 'include',
           headers: {

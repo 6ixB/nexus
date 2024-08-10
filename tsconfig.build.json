@@ -6,6 +6,13 @@
     "dist",
     "**/*spec.ts",
     "prisma",
-    "src/client"
+    
+    // Exclude client folders and files
+    "src/client/.next/**/*",
+    "src/client/app/**/*",
+    "src/client/components/**/*",
+    "src/client/hooks/**/*",
+    "src/client/lib/**/*",
+    "src/client/public/**/*"
   ]
 }

@@ -23,8 +23,9 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { ApiRoute } from '../api.routes';
 
-@Controller('users')
+@Controller(ApiRoute.USERS)
 @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
 @UseInterceptors(ClassSerializerInterceptor)
 @ApiTags('users')

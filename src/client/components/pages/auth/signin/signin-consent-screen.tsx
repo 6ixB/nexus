@@ -20,7 +20,7 @@ export default function SignInConsentScreen({
   } = useMutation({
     mutationFn: async () => {
       const response = await fetch(
-        `/auth/interactions/${interactionUid}/confirm`,
+        `/api/auth/interactions/${interactionUid}/confirm`,
         {
           method: 'POST',
           credentials: 'include',

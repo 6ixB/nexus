@@ -8,13 +8,15 @@ import {
   UseGuards,
   Session,
 } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { ClientService } from './client.service';
-import { SessionGuard } from '../auth/guards/session.guard';
+import { SessionGuard } from '../api/auth/guards/session.guard';
 import express from 'express';
 import { parse } from 'url';
-import routes, { ClientRoutes } from './client.routes';
+import clientRoutes, { ClientRoute } from './client.routes';
 
-@Controller('client')
+@Controller()
+@ApiExcludeController()
 export class ClientController {
   private readonly logger = new Logger(ClientController.name);
 
@@ -41,7 +43,7 @@ export class ClientController {
     }
   }
 
-  @Get([...routes.nextStatic])
+  @Get([...clientRoutes.nextStatic])
   async handleNextStatic(
     @Req() req: express.Request,
     @Res() res: express.Response,
@@ -50,19 +52,19 @@ export class ClientController {
     await this.handleClient(req, res);
   }
 
-  @Get([...routes.auth])
+  @Get([...clientRoutes.auth])
   @UseGuards(SessionGuard)
   async handleAuth(@Req() req: express.Request, @Res() res: express.Response) {
     this.logger.log(`Handling client auth request to ${req.url}`);
 
-    if (req.url === `/client${ClientRoutes.AUTH_SIGNIN}`) {
-      return res.redirect('/auth/signin');
+    if (req.url === ClientRoute.AUTH_SIGNIN) {
+      return res.redirect('/api/auth/signin');
     }
 
     await this.handleClient(req, res);
   }
 
-  @Get([...routes.protected])
+  @Get([...clientRoutes.protected])
   @UseGuards(SessionGuard)
   async handleProtected(
     @Req() req: express.Request,

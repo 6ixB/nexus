@@ -25,7 +25,7 @@ export function SignInPageComponent() {
   const { data: interaction, isFetching } = useQuery({
     queryKey: [interactionUid],
     queryFn: async () => {
-      const res = await fetch(`/auth/interactions/${interactionUid}`, {
+      const res = await fetch(`/api/auth/interactions/${interactionUid}`, {
         method: 'GET',
         credentials: 'include',
         headers: {

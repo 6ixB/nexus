@@ -2,7 +2,7 @@ import type { CanActivate, ExecutionContext } from '@nestjs/common';
 import { Injectable, Logger } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import type { Observable } from 'rxjs';
-import routes from 'src/client/client.routes';
+import clientRoutes from 'src/client/client.routes';
 import { parse } from 'url';
 
 interface IRequest extends Request {
@@ -25,8 +25,8 @@ export class SessionGuard implements CanActivate {
     const parsedUrl = parse(req.url, true);
     const { pathname } = parsedUrl;
 
-    const authRoutes = routes.auth.map((route) => `/client${route}`);
-    const protectedRoutes = routes.protected.map((route) => `/client${route}`);
+    const authRoutes = clientRoutes.auth.map((route) => `${route}`);
+    const protectedRoutes = clientRoutes.protected.map((route) => `${route}`);
 
     this.logger.log(`Checking if user is allowed to access ${pathname}`);
 
@@ -37,7 +37,7 @@ export class SessionGuard implements CanActivate {
     }
 
     if (user && authRoutes.includes(pathname)) {
-      res.redirect('/client');
+      res.redirect('/');
       return false;
     }
 

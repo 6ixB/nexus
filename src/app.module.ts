@@ -3,10 +3,7 @@ import {
   Module,
   ValidationPipe,
 } from '@nestjs/common';
-import { OidcModule } from './oidc/oidc.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
 import { ClientModule } from './client/client.module';
 import {
   APP_FILTER,
@@ -23,6 +20,7 @@ import {
 import type { NestSessionOptions } from 'nestjs-session';
 import { SessionModule } from 'nestjs-session';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
+import { ApiModule } from './api/api.module';
 
 @Module({
   imports: [
@@ -60,9 +58,7 @@ import { PrismaSessionStore } from '@quixo3/prisma-session-store';
         };
       },
     }),
-    UsersModule,
-    OidcModule,
-    AuthModule,
+    ApiModule,
     ClientModule,
   ],
   providers: [

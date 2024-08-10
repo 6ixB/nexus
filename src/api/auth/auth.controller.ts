@@ -14,8 +14,8 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { OidcService } from 'src/oidc/oidc.service';
-import { UsersService } from 'src/users/users.service';
+import { OidcService } from 'src/api/oidc/oidc.service';
+import { UsersService } from 'src/api/users/users.service';
 import { Request, Response } from 'express';
 import { AuthInteractionDto } from './dto/auth-interaction.dto';
 import type { InteractionResults } from 'oidc-provider';
@@ -23,8 +23,9 @@ import assert from 'assert';
 import { OidcGuard } from './guards/oidc.guard';
 import { AuthSignInDto } from './dto/auth-signin.dto';
 import { PrismaService } from 'nestjs-prisma';
+import { ApiRoute } from '../api.routes';
 
-@Controller('auth')
+@Controller(ApiRoute.AUTH)
 @ApiTags('auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
@@ -230,7 +231,7 @@ export class AuthController {
 
     this.logger.log('User: ', user);
 
-    res.redirect('/client');
+    res.redirect('/');
   }
 
   @Get('session/me')
