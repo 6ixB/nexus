@@ -30,7 +30,6 @@ model OidcModel {
     updatedAt  DateTime  @updatedAt
 
     @@unique([id, type])
-    @@map("oidc_model")
 }
 
 model Session {
