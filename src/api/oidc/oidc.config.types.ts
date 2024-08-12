@@ -42,6 +42,23 @@ export type OidcRenderError =
 
 export type OidcScopes = string[] | undefined;
 
+export type OidcRoutes =
+  | {
+      authorization?: string | undefined;
+      code_verification?: string | undefined;
+      device_authorization?: string | undefined;
+      end_session?: string | undefined;
+      introspection?: string | undefined;
+      jwks?: string | undefined;
+      registration?: string | undefined;
+      revocation?: string | undefined;
+      token?: string | undefined;
+      userinfo?: string | undefined;
+      backchannel_authentication?: string | undefined;
+      pushed_authorization_request?: string | undefined;
+    }
+  | undefined;
+
 export type OidcClaims =
   | {
       [key: string]: null | string[];

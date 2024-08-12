@@ -10,6 +10,7 @@ import type {
   OidcFindAccount,
   OidcRenderError,
   OidcScopes,
+  OidcRoutes,
   OidcClaims,
 } from './oidc.config.types';
 import base64url from 'base64url';
@@ -27,6 +28,7 @@ export class OidcConfig {
   private cookies: OidcCookies;
   private renderError: OidcRenderError;
   private scopes: OidcScopes;
+  private routes: OidcRoutes;
   private claims: OidcClaims;
   private readonly oidcConfig: Configuration;
 

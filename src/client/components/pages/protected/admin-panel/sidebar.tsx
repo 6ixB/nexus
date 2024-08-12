@@ -3,9 +3,9 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { useStore } from '@/hooks/use-store';
 import { Button } from '@/components/ui/button';
-import { Menu } from '@/components/base/admin-panel/menu';
+import { Menu } from '@/components/pages/protected/admin-panel/menu';
 import { useSidebarToggle } from '@/hooks/use-sidebar-toggle';
-import { SidebarToggle } from '@/components/base/admin-panel/sidebar-toggle';
+import { SidebarToggle } from '@/components/pages/protected/admin-panel/sidebar-toggle';
 import Nexus from '@/components/vector-graphics/nexus';
 
 export function Sidebar() {

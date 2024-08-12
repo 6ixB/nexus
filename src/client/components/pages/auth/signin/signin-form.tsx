@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input';
 import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { LoadingSpinner } from '@/components/base/loading-spinner';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 type SignInFormProps = {
   interactionUid: string | undefined;

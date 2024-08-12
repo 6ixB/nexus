@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
 import React from 'react';
 import '@/app/globals.css';
-import Providers from '@/components/base/providers';
+import Providers from '@/components/providers/providers';
 
 export const metadata: Metadata = {
   title: 'Nexus',

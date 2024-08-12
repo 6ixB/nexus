@@ -14,8 +14,8 @@ import Link from 'next/link';
 import Nexus from '@/components/vector-graphics/nexus';
 import SignInForm from '@/components/pages/auth/signin/signin-form';
 import SignInConsentScreen from '@/components/pages/auth/signin/signin-consent-screen';
-import { ModeToggle } from '@/components/base/mode-toggle';
-import { LoadingSpinner } from '@/components/base/loading-spinner';
+import { ModeToggle } from '@/components/ui/mode-toggle';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Suspense } from 'react';
 
 export function SignInPageComponent() {

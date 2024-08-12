@@ -2,14 +2,18 @@ import Link from 'next/link';
 import { MenuIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Menu } from '@/components/base/admin-panel/menu';
+import { Menu } from '@/components/pages/protected/admin-panel/menu';
 import {
   Sheet,
   SheetHeader,
   SheetContent,
   SheetTrigger,
+  SheetTitle,
+  SheetDescription,
 } from '@/components/ui/sheet';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import Nexus from '@/components/vector-graphics/nexus';
+import { ClientRoute } from '@/client.routes';
 
 export function SheetMenu() {
   return (
@@ -27,11 +31,17 @@ export function SheetMenu() {
             asChild
           >
             <Link
-              href="/dashboard"
+              href={ClientRoute.HOME}
               className="flex items-center justify-start gap-2"
             >
               <Nexus className="mr-1 h-6 w-6" />
-              <h1 className="text-lg font-bold">Nexus</h1>
+              <SheetTitle className="text-lg font-bold">Nexus</SheetTitle>
+              <SheetDescription>
+                <VisuallyHidden.Root>
+                  A Simple Identity Provider and OpenID Connect Authorization
+                  Server for your applications
+                </VisuallyHidden.Root>
+              </SheetDescription>
             </Link>
           </Button>
         </SheetHeader>

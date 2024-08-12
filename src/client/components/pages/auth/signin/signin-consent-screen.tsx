@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { LoadingSpinner } from '@/components/base/loading-spinner';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Separator } from '@/components/ui/separator';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -50,7 +50,7 @@ export default function SignInConsentScreen({
     useMutation({
       mutationFn: async () => {
         const response = await fetch(
-          `/auth/interactions/${interactionUid}/abort`,
+          `/api/auth/interactions/${interactionUid}/abort`,
           {
             method: 'POST',
             credentials: 'include',
@@ -136,7 +136,7 @@ export default function SignInConsentScreen({
           className="w-full"
         >
           {abortMutationIsPending ? (
-            <LoadingSpinner className="size-6 text-white dark:text-black" />
+            <LoadingSpinner className="size-6 text-black dark:text-white" />
           ) : (
             'Deny'
           )}
