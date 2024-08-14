@@ -22,7 +22,7 @@ import { SessionModule } from 'nestjs-session';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import { ApiModule } from './api/api.module';
 import { HttpModule } from '@nestjs/axios';
-import { NotFoundExceptionFilter } from './common/not-found-exception.filter';
+import { NotFoundExceptionFilter } from './common/filters/not-found-exception.filter';
 
 @Module({
   imports: [

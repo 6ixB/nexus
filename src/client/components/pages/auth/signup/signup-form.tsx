@@ -18,7 +18,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { LoadingSpinner } from '@/components/ui-custom/loading-spinner';
 
 export default function SignUpForm() {
   const form = useForm<z.infer<typeof CreateUserDtoSchema>>({

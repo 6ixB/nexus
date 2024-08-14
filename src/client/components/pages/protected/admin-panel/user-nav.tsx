@@ -63,7 +63,7 @@ export function UserNav() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem className="hover:cursor-pointer" asChild>
-            <Link href="/dashboard" className="flex items-center">
+            <Link href="/" className="flex items-center">
               <LayoutGrid className="mr-3 h-4 w-4 text-muted-foreground" />
               Dashboard
             </Link>

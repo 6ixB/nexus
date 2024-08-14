@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/card';
 import Link from 'next/link';
 import Nexus from '@/components/vector-graphics/nexus';
-import { ModeToggle } from '@/components/ui/mode-toggle';
+import { ModeToggle } from '@/components/ui-custom/mode-toggle';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { ShieldCheck } from 'lucide-react';
 

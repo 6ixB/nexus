@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/card';
 import Link from 'next/link';
 import Nexus from '@/components/vector-graphics/nexus';
-import { ModeToggle } from '@/components/ui/mode-toggle';
+import { ModeToggle } from '@/components/ui-custom/mode-toggle';
 import SignOutForm from '@/components/pages/auth/signout/signout-form';
 import base64url from 'base64url';
 

@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ShieldCheck } from 'lucide-react';
 import { useMutation } from '@tanstack/react-query';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { LoadingSpinner } from '@/components/ui-custom/loading-spinner';
 import { useRouter } from 'next/navigation';
 
 type SignOutFormProps = {

@@ -184,6 +184,7 @@ export class OidcConfig {
         interaction: '_interaction',
         resume: '_interaction_resume',
         session: '_session',
+        state: '_state',
       },
     };
 

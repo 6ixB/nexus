@@ -18,7 +18,7 @@ import { Input } from '@/components/ui/input';
 import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { LoadingSpinner } from '@/components/ui-custom/loading-spinner';
 import { ApiRoute } from 'src/api/api.routes';
 
 type SignInFormProps = {

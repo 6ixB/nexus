@@ -2,7 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { LoadingSpinner } from '@/components/ui-custom/loading-spinner';
 import { Separator } from '@/components/ui/separator';
 import { capitalizeFirstLetter } from '@/lib/utils';
 import { useMutation } from '@tanstack/react-query';

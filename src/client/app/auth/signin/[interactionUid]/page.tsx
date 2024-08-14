@@ -8,11 +8,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { ModeToggle } from '@/components/ui/mode-toggle';
+import { ModeToggle } from '@/components/ui-custom/mode-toggle';
 import Nexus from '@/components/vector-graphics/nexus';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
 import { serverApiAuthBaseUrl } from '@/client.constants';
+import CookieConsent from '@/components/ui-custom/cookie-consent';
 
 async function getInteraction(interactionUid: string) {
   const cookieValues = cookies()
@@ -54,6 +55,7 @@ export default async function SignInPage({
 
   return (
     <main className="container my-8 w-full">
+      <CookieConsent />
       <Card className="mx-auto max-w-md border-0 shadow-none md:border md:p-4 md:shadow-sm">
         <CardHeader>
           <div className="flex w-full justify-between">

@@ -9,7 +9,7 @@ import {
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import Link from 'next/link';
 import Nexus from '@/components/vector-graphics/nexus';
-import { ModeToggle } from '@/components/ui/mode-toggle';
+import { ModeToggle } from '@/components/ui-custom/mode-toggle';
 import { AlertCircle } from 'lucide-react';
 
 export default async function AuthErrorPage({

@@ -26,11 +26,12 @@ export function Sidebar() {
           className={cn(
             'mb-1 transition-transform duration-300 ease-in-out',
             sidebar?.isOpen === false ? 'translate-x-1' : 'translate-x-0',
+            sidebar?.isOpen === true && '!justify-start',
           )}
           variant="link"
           asChild
         >
-          <Link href="/dashboard" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2 !no-underline">
             <Nexus className="mr-1 h-6 w-6" />
             <h1
               className={cn(
