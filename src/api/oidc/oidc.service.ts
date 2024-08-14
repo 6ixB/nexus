@@ -12,6 +12,7 @@ import type {
   DefaultContext,
   Next,
 } from 'koa';
+import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class OidcService {
@@ -31,9 +32,8 @@ export class OidcService {
     @Inject(OIDC_PROVIDER_MODULE)
     private readonly oidcProviderModule: OidcProviderModule,
     private readonly oidcConfig: OidcConfig,
+    private readonly httpService: HttpService,
   ) {
-    this.logger.log('Creating OIDC provider');
-
     const issuer = `${this.issuerProtocol}://${this.issuerHost}:${this.issuerPort}`;
 
     this.provider = new oidcProviderModule.Provider(
@@ -45,6 +45,10 @@ export class OidcService {
       this.preMiddleware(ctx, next);
       await next();
       this.postMiddleware(ctx, next);
+    });
+
+    this.provider.on('end_session.error', async (ctx) => {
+      this.logger.error(ctx);
     });
   }
 

@@ -21,6 +21,8 @@ import type { NestSessionOptions } from 'nestjs-session';
 import { SessionModule } from 'nestjs-session';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import { ApiModule } from './api/api.module';
+import { HttpModule } from '@nestjs/axios';
+import { NotFoundExceptionFilter } from './common/not-found-exception.filter';
 
 @Module({
   imports: [
@@ -51,13 +53,17 @@ import { ApiModule } from './api/api.module';
               dbRecordIdIsSessionId: true,
               dbRecordIdFunction: undefined,
             }),
+            name: '_session',
             cookie: {
-              maxAge: 60 * 60 * 1000,
+              maxAge: 14 * 24 * 60 * 60 * 1000,
+              httpOnly: true,
+              path: '/',
             },
           },
         };
       },
     }),
+    HttpModule,
     ApiModule,
     ClientModule,
   ],
@@ -78,6 +84,10 @@ import { ApiModule } from './api/api.module';
       useFactory: ({ httpAdapter }: HttpAdapterHost) => {
         return new PrismaClientExceptionFilter(httpAdapter);
       },
+    },
+    {
+      provide: APP_FILTER,
+      useClass: NotFoundExceptionFilter,
     },
   ],
 })

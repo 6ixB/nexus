@@ -6,9 +6,10 @@ import { oidcProviderModuleFactory } from './oidc.provider-module';
 import { ClientModule } from 'src/client/client.module';
 import { OidcConfig } from './oidc.config';
 import { OidcMiddleware } from './oidc.middleware';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
-  imports: [ClientModule],
+  imports: [HttpModule, ClientModule],
   controllers: [OidcController],
   providers: [oidcProviderModuleFactory(), OidcConfig, OidcService],
   exports: [OidcConfig, OidcService],

@@ -17,7 +17,6 @@ export class OidcController {
     const oidcCallback = oidcProvider.callback();
 
     req.url = req.originalUrl.replace(`/${ApiRoute.OIDC}`, '');
-    this.logger.log(`Handling OIDC request to: ${req.url}`);
 
     return oidcCallback(req, res);
   }

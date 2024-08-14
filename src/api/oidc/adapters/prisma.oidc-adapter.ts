@@ -57,9 +57,6 @@ export class OidcPrismaAdapter implements Adapter {
     payload: AdapterPayload,
     expiresIn?: number,
   ): Promise<void> {
-    this.logger.log(`Upserting ${models[this.type - 1]} with ID: ${id}`);
-    this.logger.log(payload);
-
     const data = {
       type: this.type,
       payload: payload as Prisma.JsonObject,
@@ -87,8 +84,6 @@ export class OidcPrismaAdapter implements Adapter {
   }
 
   async find(id: string): Promise<AdapterPayload | undefined> {
-    this.logger.log(`Finding ${models[this.type - 1]} with ID: ${id}`);
-
     const doc = await prisma.oidcModel.findUnique({
       where: {
         id_type: {
@@ -99,21 +94,13 @@ export class OidcPrismaAdapter implements Adapter {
     });
 
     if (!doc || (doc.expiresAt && doc.expiresAt < new Date())) {
-      this.logger.log(
-        `Find ${models[this.type - 1]} with ID: ${id} not found or expired`,
-      );
       return undefined;
     }
 
-    this.logger.log(`Found ${models[this.type - 1]} with ID: ${id}`);
     return prepare(doc);
   }
 
   async findByUserCode(userCode: string): Promise<AdapterPayload | undefined> {
-    this.logger.log(
-      `Finding ${models[this.type - 1]} with UserCode: ${userCode}`,
-    );
-
     const doc = await prisma.oidcModel.findFirst({
       where: {
         userCode,
@@ -121,21 +108,13 @@ export class OidcPrismaAdapter implements Adapter {
     });
 
     if (!doc || (doc.expiresAt && doc.expiresAt < new Date())) {
-      this.logger.log(
-        `FindByUserCode ${models[this.type - 1]} with UserCode: ${userCode} not found or expired`,
-      );
       return undefined;
     }
 
-    this.logger.log(
-      `Found ${models[this.type - 1]} with UserCode: ${userCode}`,
-    );
     return prepare(doc);
   }
 
   async findByUid(uid: string): Promise<AdapterPayload | undefined> {
-    this.logger.log(`Finding ${models[this.type - 1]} with UID: ${uid}`);
-
     const doc = await prisma.oidcModel.findUnique({
       where: {
         uid,
@@ -143,19 +122,13 @@ export class OidcPrismaAdapter implements Adapter {
     });
 
     if (!doc || (doc.expiresAt && doc.expiresAt < new Date())) {
-      this.logger.log(
-        `FindByUid ${models[this.type - 1]} with UID: ${uid} not found or expired`,
-      );
       return undefined;
     }
 
-    this.logger.log(`Found ${models[this.type - 1]} with UID: ${uid}`);
     return prepare(doc);
   }
 
   async consume(id: string): Promise<void> {
-    this.logger.log(`Consuming ${models[this.type - 1]} with ID: ${id}`);
-
     await prisma.oidcModel.update({
       where: {
         id_type: {
@@ -170,8 +143,6 @@ export class OidcPrismaAdapter implements Adapter {
   }
 
   async destroy(id: string): Promise<void> {
-    this.logger.log(`Destroying ${models[this.type - 1]} with ID: ${id}`);
-
     await prisma.oidcModel.delete({
       where: {
         id_type: {
@@ -183,10 +154,6 @@ export class OidcPrismaAdapter implements Adapter {
   }
 
   async revokeByGrantId(grantId: string): Promise<void> {
-    this.logger.log(
-      `Revoking ${models[this.type - 1]} with GrantId: ${grantId}`,
-    );
-
     await prisma.oidcModel.deleteMany({
       where: {
         grantId,

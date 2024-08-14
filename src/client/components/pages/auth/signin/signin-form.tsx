@@ -1,3 +1,5 @@
+'use client';
+
 import type { AuthSignInDto } from '@/lib/schema/auth.schema';
 import { AuthSignInDtoSchema } from '@/lib/schema/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,12 +19,13 @@ import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { ApiRoute } from 'src/api/api.routes';
 
 type SignInFormProps = {
-  interactionUid: string | undefined;
+  interaction: any;
 };
 
-export default function SignInForm({ interactionUid }: SignInFormProps) {
+export default function SignInForm({ interaction }: SignInFormProps) {
   const form = useForm<z.infer<typeof AuthSignInDtoSchema>>({
     resolver: zodResolver(AuthSignInDtoSchema),
     defaultValues: {
@@ -39,7 +42,7 @@ export default function SignInForm({ interactionUid }: SignInFormProps) {
   } = useMutation({
     mutationFn: async (authInteractionDto: any) => {
       const response = await fetch(
-        `/api/auth/interactions/${interactionUid}/signin`,
+        `/api/auth/interactions/${interaction.jti}/signin`,
         {
           method: 'POST',
           credentials: 'include',
@@ -72,7 +75,7 @@ export default function SignInForm({ interactionUid }: SignInFormProps) {
   const { mutateAsync: signInMutateAsync, isPending: signInMutationIsPending } =
     useMutation({
       mutationFn: async (authSignInDto: AuthSignInDto) => {
-        const response = await fetch('/api/auth/signin', {
+        const response = await fetch(`/${ApiRoute.AUTH}/signin`, {
           method: 'POST',
           credentials: 'include',
           headers: {
@@ -91,6 +94,7 @@ export default function SignInForm({ interactionUid }: SignInFormProps) {
         const authInteractionDto = {
           login: {
             accountId: email,
+            amr: ['pwd'],
           },
         };
 

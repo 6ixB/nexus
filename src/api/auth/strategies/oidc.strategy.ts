@@ -9,12 +9,10 @@ export class OidcStrategy {
 
   constructor(private readonly authService: AuthService) {
     passport.serializeUser((user, done) => {
-      this.logger.log(`serializeUser: ${JSON.stringify(user)}`);
       done(null, user);
     });
 
     passport.deserializeUser((user, done) => {
-      this.logger.log(`deserializeUser: ${JSON.stringify(user)}`);
       done(null, user);
     });
   }
@@ -34,12 +32,15 @@ export class OidcStrategy {
           usePKCE: true,
         },
         (tokenSet, userInfo, done) => {
-          this.logger.log('Using OIDC strategy');
-          this.logger.log(`tokenSet: ${JSON.stringify(tokenSet)}`);
-          this.logger.log(`userinfo: ${JSON.stringify(userInfo)}`);
+          const endSessionUrl = client.endSessionUrl({
+            id_token_hint: tokenSet.id_token,
+            client_id: client.metadata.client_id,
+            post_logout_redirect_uri:
+              client.metadata.post_logout_redirect_uris[0],
+            logout_hint: userInfo.sub,
+          });
 
-          const user = { ...userInfo, tokenSet };
-
+          const user = { ...userInfo, tokenSet, endSessionUrl };
           return done(null, user);
         },
       ),

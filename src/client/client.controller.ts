@@ -14,6 +14,7 @@ import { SessionGuard } from '../api/auth/guards/session.guard';
 import express from 'express';
 import { parse } from 'url';
 import clientRoutes, { ClientRoute } from './client.routes';
+import { ApiRoute } from 'src/api/api.routes';
 
 @Controller()
 @ApiExcludeController()
@@ -36,29 +37,25 @@ export class ClientController {
 
       await nextAppRequestHandler(req, res, parsedUrl);
     } catch (error) {
-      this.logger.error(`Error rendering Next.js page: ${error.message}`);
       res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .send('Internal Server Error');
     }
   }
 
-  @Get([...clientRoutes.nextStatic])
+  @Get([...clientRoutes.public, ...clientRoutes.nextStatic])
   async handleNextStatic(
     @Req() req: express.Request,
     @Res() res: express.Response,
   ) {
-    this.logger.log(`Handling client static assets request to ${req.url}`);
     await this.handleClient(req, res);
   }
 
   @Get([...clientRoutes.auth])
   @UseGuards(SessionGuard)
   async handleAuth(@Req() req: express.Request, @Res() res: express.Response) {
-    this.logger.log(`Handling client auth request to ${req.url}`);
-
     if (req.url === ClientRoute.AUTH_SIGNIN) {
-      return res.redirect('/api/auth/signin');
+      return res.redirect(`/${ApiRoute.AUTH}/signin`);
     }
 
     await this.handleClient(req, res);
@@ -71,8 +68,6 @@ export class ClientController {
     @Res() res: express.Response,
     @Session() session: Record<string, any>,
   ) {
-    this.logger.log(`Handling client protected request to ${req.url}`);
-    this.logger.log('Current session:', JSON.stringify(session));
     await this.handleClient(req, res, session);
   }
 }

@@ -21,12 +21,6 @@ export class ClientService implements OnModuleInit {
   private nextApp: NextServer;
 
   constructor(private readonly configService: ConfigService) {
-    this.logger.log('Creating Next.js application');
-    this.logger.log(`Development mode: ${this.dev}`);
-    this.logger.log(`Hostname: ${this.hostname}`);
-    this.logger.log(`Port: ${this.port}`);
-    this.logger.log(`Path: ${this.path}`);
-
     this.nextApp = next({
       dev: this.dev,
       hostname: this.hostname,
@@ -37,9 +31,6 @@ export class ClientService implements OnModuleInit {
 
   async onModuleInit() {
     await this.nextApp.prepare();
-    this.logger.log(
-      'Next.js application prepared and ready to handle requests',
-    );
   }
 
   public getNextApp() {

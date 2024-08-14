@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Ellipsis, LogOut } from 'lucide-react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 import { cn } from '@/lib/utils';
 import { getMenuList } from '@/lib/menu-list';
@@ -15,6 +15,7 @@ import {
   TooltipContent,
   TooltipProvider,
 } from '@/components/ui/tooltip';
+import { useSessionStore } from '@/hooks/use-session-store';
 
 interface MenuProps {
   isOpen: boolean | undefined;
@@ -23,6 +24,9 @@ interface MenuProps {
 export function Menu({ isOpen }: MenuProps) {
   const pathname = usePathname();
   const menuList = getMenuList(pathname);
+
+  const { endSessionUrl } = useSessionStore();
+  const router = useRouter();
 
   return (
     <ScrollArea className="[&>div>div[style]]:!block">
@@ -108,7 +112,11 @@ export function Menu({ isOpen }: MenuProps) {
               <Tooltip delayDuration={100}>
                 <TooltipTrigger asChild>
                   <Button
-                    onClick={() => {}}
+                    onClick={() => {
+                      router.push(
+                        endSessionUrl ? endSessionUrl : '/api/oidc/session/end',
+                      );
+                    }}
                     variant="outline"
                     className="mt-5 h-10 w-full justify-center"
                   >

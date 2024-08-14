@@ -14,10 +14,6 @@ export class OidcMiddleware implements NestMiddleware {
     const forbiddenParam = '_rsc';
 
     if (req.query[forbiddenParam]) {
-      this.logger.error(
-        `Requests with the query parameter '${forbiddenParam}' are not allowed and therefore are ignored.`,
-      );
-
       throw new ForbiddenException(
         `Requests with the query parameter '${forbiddenParam}' are not allowed and therefore are ignored.`,
       );

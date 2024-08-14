@@ -1,8 +1,3 @@
-'use client';
-
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
 import base64url from 'base64url';
 import {
   Card,
@@ -17,10 +12,13 @@ import Nexus from '@/components/vector-graphics/nexus';
 import { ModeToggle } from '@/components/ui/mode-toggle';
 import { AlertCircle } from 'lucide-react';
 
-function AuthErrorPageComponent() {
-  const searchParams = useSearchParams();
-  const errorParam = searchParams.get('error');
-  const error = errorParam ? JSON.parse(base64url.decode(errorParam)) : null;
+export default async function AuthErrorPage({
+  params,
+}: {
+  params: { error: string };
+}) {
+  const { error } = params;
+  const decodedError = JSON.parse(base64url.decode(error));
 
   return (
     <main className="container my-8 w-full">
@@ -42,10 +40,12 @@ function AuthErrorPageComponent() {
         <CardContent className="min-h-16">
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
-            <AlertTitle>{error ? error.name : 'Error'}</AlertTitle>
+            <AlertTitle>
+              {decodedError ? decodedError.name : 'Error'}
+            </AlertTitle>
             <AlertDescription>
-              {error
-                ? error.error_description
+              {decodedError
+                ? decodedError.error_description
                 : 'Oops... something went wrong!'}
             </AlertDescription>
           </Alert>
@@ -66,17 +66,5 @@ function AuthErrorPageComponent() {
         </CardFooter>
       </Card>
     </main>
-  );
-}
-
-export default function AuthErrorPage() {
-  return (
-    <Suspense
-      fallback={
-        <LoadingSpinner className="mx-auto size-6 text-black dark:text-white" />
-      }
-    >
-      {<AuthErrorPageComponent />}
-    </Suspense>
   );
 }
