@@ -1,7 +1,14 @@
 'use client';
 
-import type { AuthSignInDto } from '@/lib/schema/auth.schema';
-import { AuthSignInDtoSchema } from '@/lib/schema/auth.schema';
+import type {
+  AuthInteraction,
+  AuthSignIn,
+  Interaction,
+} from '@/lib/schema/auth.schema';
+import {
+  AuthInteractionDtoSchema,
+  AuthSignInSchema,
+} from '@/lib/schema/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import type { z } from 'zod';
@@ -22,12 +29,12 @@ import { LoadingSpinner } from '@/components/ui-custom/loading-spinner';
 import { ApiRoute } from 'src/api/api.routes';
 
 type SignInFormProps = {
-  interaction: any;
+  interaction: Interaction;
 };
 
 export default function SignInForm({ interaction }: SignInFormProps) {
-  const form = useForm<z.infer<typeof AuthSignInDtoSchema>>({
-    resolver: zodResolver(AuthSignInDtoSchema),
+  const form = useForm<z.infer<typeof AuthSignInSchema>>({
+    resolver: zodResolver(AuthSignInSchema),
     defaultValues: {
       email: '',
       password: '',
@@ -40,7 +47,7 @@ export default function SignInForm({ interaction }: SignInFormProps) {
     mutateAsync: signInInteractionMutateAsync,
     isPending: signInInteractionMutationIsPending,
   } = useMutation({
-    mutationFn: async (authInteractionDto: any) => {
+    mutationFn: async (authInteractionDto: AuthInteraction) => {
       const response = await fetch(
         `/api/auth/interactions/${interaction.jti}/signin`,
         {
@@ -74,7 +81,7 @@ export default function SignInForm({ interaction }: SignInFormProps) {
 
   const { mutateAsync: signInMutateAsync, isPending: signInMutationIsPending } =
     useMutation({
-      mutationFn: async (authSignInDto: AuthSignInDto) => {
+      mutationFn: async (authSignInDto: AuthSignIn) => {
         const response = await fetch(`/${ApiRoute.AUTH}/signin`, {
           method: 'POST',
           credentials: 'include',
@@ -91,12 +98,12 @@ export default function SignInForm({ interaction }: SignInFormProps) {
       onSuccess: async (data) => {
         const { email } = data;
 
-        const authInteractionDto = {
+        const authInteractionDto = AuthInteractionDtoSchema.parse({
           login: {
             accountId: email,
             amr: ['pwd'],
           },
-        };
+        });
 
         await signInInteractionMutateAsync(authInteractionDto);
       },
@@ -108,9 +115,9 @@ export default function SignInForm({ interaction }: SignInFormProps) {
       },
     });
 
-  async function onSubmit(values: z.infer<typeof AuthSignInDtoSchema>) {
+  async function onSubmit(values: z.infer<typeof AuthSignInSchema>) {
     try {
-      const authSignInDto = AuthSignInDtoSchema.parse(values);
+      const authSignInDto = AuthSignInSchema.parse(values);
 
       await signInMutateAsync(authSignInDto);
     } catch (error) {

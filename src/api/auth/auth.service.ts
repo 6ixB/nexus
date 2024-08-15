@@ -95,10 +95,19 @@ export class AuthService {
   ) {
     const oidcProvider = this.oidcService.getProvider();
 
+    const user = await this.prismaService.user.findUnique({
+      where: { email: authInteractionDto.login.accountId },
+    });
+
     const redirectTo = await oidcProvider.interactionResult(
       req,
       res,
-      authInteractionDto as InteractionResults,
+      {
+        ...authInteractionDto,
+        extras: {
+          name: `${user?.firstName} ${user?.lastName}`,
+        },
+      } as unknown as InteractionResults,
       { mergeWithLastSubmission: false },
     );
 

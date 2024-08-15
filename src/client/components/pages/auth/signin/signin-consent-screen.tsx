@@ -4,17 +4,20 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui-custom/loading-spinner';
 import { Separator } from '@/components/ui/separator';
-import { capitalizeFirstLetter } from '@/lib/utils';
+import { capitalizeFirstLetter, getUserInitials } from '@/lib/utils';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import type { Interaction } from '@/lib/schema/auth.schema';
 
 type SignInConsentScreenProps = {
-  interaction: any;
+  interaction: Interaction;
 };
 
 export default function SignInConsentScreen({
   interaction,
 }: SignInConsentScreenProps) {
+  console.log(interaction);
+
   const router = useRouter();
 
   const {
@@ -78,24 +81,30 @@ export default function SignInConsentScreen({
       <div className="w-full text-center">
         <span className="font-medium">
           {capitalizeFirstLetter(interaction.params.client_id)}
-        </span>{' '}
-        wants to access your account
+        </span>
+        &nbsp; wants to access your account
       </div>
       <div className="flex w-full flex-col items-center justify-center gap-y-2">
         <Avatar>
           <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>JD</AvatarFallback>
+          <AvatarFallback>
+            {interaction.lastSubmission?.extras
+              ? getUserInitials(
+                  (interaction.lastSubmission.extras as { name?: string }).name,
+                )
+              : ''}
+          </AvatarFallback>
         </Avatar>
         <span className="font-medium">{interaction.session.accountId}</span>
       </div>
       <Separator />
       <div>
         <div>
-          This will allow{' '}
+          This will allow&nbsp;
           <span className="font-medium">
             {capitalizeFirstLetter(interaction.params.client_id)}
-          </span>{' '}
-          to access the following information:
+          </span>
+          &nbsp; to access the following information:
         </div>
         <ul className="list-inside list-disc font-light">
           <li>
