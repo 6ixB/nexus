@@ -17,7 +17,7 @@ $ npm install
 $ npm run start
 
 # watch mode
-$ npm run start:dev -- -b swc
+$ npm run start:dev -- -b swc --type-check
 
 # production mode
 $ npm run start:prod

@@ -11,6 +11,7 @@ export default function CookieConsent() {
 
   const close = () => {
     setIsOpen(false);
+    document.cookie = '_cookie_consent=true; path=/';
     setTimeout(() => {
       setHide(true);
     }, 700);
@@ -19,6 +20,12 @@ export default function CookieConsent() {
   useEffect(() => {
     try {
       setIsOpen(true);
+      if (document.cookie.includes('_cookie_consent=true')) {
+        setIsOpen(false);
+        setTimeout(() => {
+          setHide(true);
+        }, 700);
+      }
     } catch (error) {
       console.log('Error: ', error);
     }

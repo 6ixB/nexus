@@ -9,7 +9,7 @@ async function getSession() {
   const cookieValues = cookies()
     .getAll()
     .map((cookieObj) => `${cookieObj.name}=${cookieObj.value}`)
-    .join(';');
+    .join('; ');
 
   try {
     const res = await fetch(`${serverApiAuthBaseUrl}/session/me`, {

@@ -19,7 +19,7 @@ async function getInteraction(interactionUid: string) {
   const cookieValues = cookies()
     .getAll()
     .map((cookieObj) => `${cookieObj.name}=${cookieObj.value}`)
-    .join(';');
+    .join('; ');
 
   try {
     const res = await fetch(
