@@ -16,8 +16,6 @@ type SignInConsentScreenProps = {
 export default function SignInConsentScreen({
   interaction,
 }: SignInConsentScreenProps) {
-  console.log(interaction);
-
   const router = useRouter();
 
   const {
@@ -82,7 +80,7 @@ export default function SignInConsentScreen({
         <span className="font-medium">
           {capitalizeFirstLetter(interaction.params.client_id)}
         </span>
-        &nbsp; wants to access your account
+        &nbsp;wants to access your account
       </div>
       <div className="flex w-full flex-col items-center justify-center gap-y-2">
         <Avatar>
@@ -104,7 +102,7 @@ export default function SignInConsentScreen({
           <span className="font-medium">
             {capitalizeFirstLetter(interaction.params.client_id)}
           </span>
-          &nbsp; to access the following information:
+          &nbsp;to access the following information:
         </div>
         <ul className="list-inside list-disc font-light">
           <li>

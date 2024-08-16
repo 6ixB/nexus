@@ -66,6 +66,8 @@ export class OidcPrismaAdapter implements Adapter {
       expiresAt: expiresAt(expiresIn),
     };
 
+    this.logger.debug(`Upserting ${models[this.type - 1]} with id ${id}`);
+
     await prisma.oidcModel.upsert({
       where: {
         id_type: {
@@ -84,6 +86,8 @@ export class OidcPrismaAdapter implements Adapter {
   }
 
   async find(id: string): Promise<AdapterPayload | undefined> {
+    this.logger.debug(`Finding ${models[this.type - 1]} with id ${id}`);
+
     const doc = await prisma.oidcModel.findUnique({
       where: {
         id_type: {
@@ -94,6 +98,7 @@ export class OidcPrismaAdapter implements Adapter {
     });
 
     if (!doc || (doc.expiresAt && doc.expiresAt < new Date())) {
+      this.logger.debug(`No ${models[this.type - 1]} found with id ${id}`);
       return undefined;
     }
 
@@ -101,6 +106,10 @@ export class OidcPrismaAdapter implements Adapter {
   }
 
   async findByUserCode(userCode: string): Promise<AdapterPayload | undefined> {
+    this.logger.debug(
+      `Finding ${models[this.type - 1]} with userCode ${userCode}`,
+    );
+
     const doc = await prisma.oidcModel.findFirst({
       where: {
         userCode,
@@ -108,6 +117,9 @@ export class OidcPrismaAdapter implements Adapter {
     });
 
     if (!doc || (doc.expiresAt && doc.expiresAt < new Date())) {
+      this.logger.debug(
+        `No ${models[this.type - 1]} found with userCode ${userCode}`,
+      );
       return undefined;
     }
 
@@ -115,6 +127,8 @@ export class OidcPrismaAdapter implements Adapter {
   }
 
   async findByUid(uid: string): Promise<AdapterPayload | undefined> {
+    this.logger.debug(`Finding ${models[this.type - 1]} with uid ${uid}`);
+
     const doc = await prisma.oidcModel.findUnique({
       where: {
         uid,
@@ -122,6 +136,7 @@ export class OidcPrismaAdapter implements Adapter {
     });
 
     if (!doc || (doc.expiresAt && doc.expiresAt < new Date())) {
+      this.logger.debug(`No ${models[this.type - 1]} found with uid ${uid}`);
       return undefined;
     }
 
@@ -129,6 +144,8 @@ export class OidcPrismaAdapter implements Adapter {
   }
 
   async consume(id: string): Promise<void> {
+    this.logger.debug(`Consuming ${models[this.type - 1]} with id ${id}`);
+
     await prisma.oidcModel.update({
       where: {
         id_type: {
@@ -143,6 +160,8 @@ export class OidcPrismaAdapter implements Adapter {
   }
 
   async destroy(id: string): Promise<void> {
+    this.logger.debug(`Destroying ${models[this.type - 1]} with id ${id}`);
+
     await prisma.oidcModel.delete({
       where: {
         id_type: {
@@ -154,6 +173,10 @@ export class OidcPrismaAdapter implements Adapter {
   }
 
   async revokeByGrantId(grantId: string): Promise<void> {
+    this.logger.debug(
+      `Revoking ${models[this.type - 1]}s with grantId ${grantId}`,
+    );
+
     await prisma.oidcModel.deleteMany({
       where: {
         grantId,

@@ -57,6 +57,14 @@ export class OidcConfig {
           ),
         ],
       },
+      // Axiom - This is a test client
+      {
+        client_id: 'axiom',
+        client_secret: 'EwLUoeuPWmkU+wVsMbXJW14ua8qHaXIb4P4blYhYAEma',
+        redirect_uris: ['http://localhost:4000/api/auth/callback/nexus'],
+        grant_types: ['authorization_code'],
+        response_types: ['code'],
+      },
     ];
 
     this.scopes = ['openid', 'profile', 'email', 'offline_access'];

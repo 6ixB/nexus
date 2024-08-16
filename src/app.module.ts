@@ -23,6 +23,7 @@ import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import { ApiModule } from './api/api.module';
 import { HttpModule } from '@nestjs/axios';
 import { NotFoundExceptionFilter } from './common/filters/not-found-exception.filter';
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 
 @Module({
   imports: [
@@ -77,6 +78,10 @@ import { NotFoundExceptionFilter } from './common/filters/not-found-exception.fi
       inject: [Reflector],
       useFactory: (reflector: Reflector) =>
         new ClassSerializerInterceptor(reflector),
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
     },
     {
       provide: APP_FILTER,
