@@ -24,7 +24,7 @@ export function Sidebar() {
       <div className="relative flex h-full flex-col overflow-y-auto px-3 py-4 shadow-md dark:shadow-zinc-800">
         <Button
           className={cn(
-            'mb-1 transition-transform duration-300 ease-in-out',
+            'mb-1 transition-transform duration-300 ease-in-out dark:text-primary-foreground',
             sidebar?.isOpen === false ? 'translate-x-1' : 'translate-x-0',
             sidebar?.isOpen === true && '!justify-start',
           )}

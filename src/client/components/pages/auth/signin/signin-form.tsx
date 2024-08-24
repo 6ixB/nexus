@@ -180,12 +180,9 @@ export default function SignInForm({ interaction }: SignInFormProps) {
             </FormItem>
           )}
         />
-        <Button
-          type="submit"
-          className="w-full text-base text-white dark:text-black"
-        >
+        <Button type="submit" className="w-full text-base">
           {signInMutationIsPending || signInInteractionMutationIsPending ? (
-            <LoadingSpinner className="size-6 text-white dark:text-black" />
+            <LoadingSpinner className="size-6" />
           ) : (
             'Sign in'
           )}
