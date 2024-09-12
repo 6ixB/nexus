@@ -73,12 +73,20 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
       provide: APP_PIPE,
       useValue: new ValidationPipe({ whitelist: true, transform: true }),
     },
+    /*
+    The following app interceptor is commented because it has unresolved problems,
+    see the error details:
+    
+    TypeError: this.removeListener is not a function
+    
     {
       provide: APP_INTERCEPTOR,
       inject: [Reflector],
       useFactory: (reflector: Reflector) =>
         new ClassSerializerInterceptor(reflector),
     },
+
+    */
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,

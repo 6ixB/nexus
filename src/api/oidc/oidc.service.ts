@@ -13,19 +13,13 @@ import type {
   Next,
 } from 'koa';
 import { HttpService } from '@nestjs/axios';
+import base64url from 'base64url';
 
 @Injectable()
 export class OidcService {
   private logger = new Logger(OidcService.name);
 
   private readonly provider: Provider;
-
-  private readonly issuerProtocol =
-    this.configService.get<string>('SERVER_ENV') === 'production'
-      ? 'https'
-      : 'http';
-  private readonly issuerHost = this.configService.get<string>('SERVER_HOST');
-  private readonly issuerPort = this.configService.get<string>('SERVER_PORT');
 
   constructor(
     private readonly configService: ConfigService,
@@ -34,7 +28,7 @@ export class OidcService {
     private readonly oidcConfig: OidcConfig,
     private readonly httpService: HttpService,
   ) {
-    const issuer = `${this.issuerProtocol}://${this.issuerHost}:${this.issuerPort}`;
+    const issuer = `${this.oidcConfig.getOrigin()}/api/oidc`;
 
     this.provider = new oidcProviderModule.Provider(
       issuer,

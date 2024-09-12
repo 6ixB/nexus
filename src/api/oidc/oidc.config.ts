@@ -24,6 +24,14 @@ import { parse } from 'node-html-parser';
 export class OidcConfig {
   private readonly logger = new Logger(OidcConfig.name);
 
+  private readonly originSchema =
+    this.configService.get<string>('SERVER_ENV') === 'production'
+      ? 'https'
+      : 'http';
+  private readonly originHost = this.configService.get<string>('SERVER_HOST');
+  private readonly originPort = this.configService.get<string>('SERVER_PORT');
+  private readonly origin = `${this.originSchema}://${this.originHost}:${this.originPort}`;
+
   private clients: OidcClients;
   private adapter: OidcAdapter;
   private findAccount: OidcFindAccount;
@@ -142,7 +150,7 @@ export class OidcConfig {
 
     this.interactions = {
       url: async (ctx, interaction) => {
-        const url = `http://localhost:3000/auth/signin/${interaction.uid}`;
+        const url = `${this.origin}/auth/signin/${interaction.uid}`;
         return url;
       },
     };
@@ -159,16 +167,13 @@ export class OidcConfig {
 
           const url = new URL(
             `${ClientRoute.AUTH_SIGNOUT.replace('/:xsrf', '')}/${base64url.encode(xsrf)}`,
-            'http://localhost:3000',
+            this.origin,
           );
 
           ctx.redirect(url.toString());
         },
         postLogoutSuccessSource(ctx) {
-          const url = new URL(
-            ClientRoute.AUTH_SIGNOUT_SUCCESS,
-            'http://localhost:3000',
-          );
+          const url = new URL(ClientRoute.AUTH_SIGNOUT_SUCCESS, this.origin);
           ctx.redirect(url.toString());
         },
       },
@@ -199,7 +204,7 @@ export class OidcConfig {
     this.renderError = async (ctx, out, error) => {
       const url = new URL(
         `${ClientRoute.AUTH_ERROR.replace('/:error', '')}/${base64url.encode(JSON.stringify(error))}`,
-        'http://localhost:3000',
+        this.origin,
       );
       ctx.redirect(url.toString());
     };
@@ -250,11 +255,11 @@ export class OidcConfig {
       code_verification: '/device',
       device_authorization: '/device/authorize',
       end_session: '/session/end',
-      introspection: '/token/instrospect',
+      introspection: '/instrospect',
       jwks: '/jwks',
       pushed_authorization_request: '/request',
       registration: '/register',
-      revocation: '/token/revoke',
+      revocation: '/revoke',
       token: '/token',
       userinfo: '/me',
     };
@@ -292,6 +297,10 @@ export class OidcConfig {
       jwks: this.jwks,
       ttl: this.ttl,
     };
+  }
+
+  public getOrigin() {
+    return this.origin;
   }
 
   public getOidcConfig(): Configuration {
